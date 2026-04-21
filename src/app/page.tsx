@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 
 const ADMIN_NAME = "admin";
 const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || "admin123";
+const JUDGE_PASSWORD = process.env.NEXT_PUBLIC_JUDGE_PASSWORD || "judge123";
 
 type Mode = "choice" | "name" | "password";
 
@@ -12,6 +13,7 @@ export default function LoginPage() {
   const router = useRouter();
   const [mode, setMode] = useState<Mode>("choice");
   const [name, setName] = useState("");
+  const [judgePassword, setJudgePassword] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
@@ -19,6 +21,11 @@ export default function LoginPage() {
     e.preventDefault();
     const trimmed = name.trim();
     if (!trimmed) return;
+
+    if (judgePassword !== JUDGE_PASSWORD) {
+      setError("Incorrect password");
+      return;
+    }
 
     localStorage.setItem("user-name", trimmed);
     localStorage.setItem(
@@ -42,6 +49,7 @@ export default function LoginPage() {
   const goBack = () => {
     setMode("choice");
     setName("");
+    setJudgePassword("");
     setPassword("");
     setError("");
   };
@@ -125,9 +133,24 @@ export default function LoginPage() {
                              text-[#e8d44d] placeholder-[#e8d44d]/70 text-center text-sm font-bold
                              tracking-[0.2em] focus:outline-none focus:border-[#e8d44d] transition-colors"
                 />
+                <input
+                  type="password"
+                  value={judgePassword}
+                  onChange={(e) => {
+                    setJudgePassword(e.target.value);
+                    setError("");
+                  }}
+                  placeholder="ENTER PASSWORD"
+                  className="w-full px-6 py-4 bg-transparent border-2 border-[#e8d44d]/60 rounded-full
+                             text-[#e8d44d] placeholder-[#e8d44d]/70 text-center text-sm font-bold
+                             tracking-[0.2em] focus:outline-none focus:border-[#e8d44d] transition-colors"
+                />
+                {error && (
+                  <p className="text-red-300 text-xs text-center">{error}</p>
+                )}
                 <button
                   type="submit"
-                  disabled={!name.trim()}
+                  disabled={!name.trim() || !judgePassword}
                   className="relative w-full py-4 rounded-full bg-[#1a1a1a] text-white text-sm font-black tracking-[0.25em]
                              shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_2px_6px_rgba(0,0,0,0.35)]
                              hover:bg-[#2a2a2a] disabled:opacity-40 disabled:cursor-not-allowed transition-all overflow-hidden"
