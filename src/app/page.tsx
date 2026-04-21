@@ -109,10 +109,12 @@ export default function LoginPage() {
                 <button
                   type="submit"
                   disabled={!name.trim()}
-                  className="w-full py-4 rounded-full bg-[#3a0000]/70 text-white/80 text-sm font-black tracking-[0.25em]
-                             hover:bg-[#3a0000]/90 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                  className="relative w-full py-4 rounded-full bg-[#5a0e0e] text-white/90 text-sm font-black tracking-[0.25em]
+                             shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_2px_6px_rgba(0,0,0,0.35)]
+                             hover:bg-[#6d1212] disabled:opacity-40 disabled:cursor-not-allowed transition-all overflow-hidden"
                 >
-                  JOIN AS JUDGE
+                  <span className="grain-overlay absolute inset-0 rounded-full opacity-40" />
+                  <span className="relative">JOIN AS JUDGE</span>
                 </button>
               </form>
             ) : (
@@ -141,10 +143,12 @@ export default function LoginPage() {
                 <button
                   type="submit"
                   disabled={!password}
-                  className="w-full py-4 rounded-full bg-[#3a0000]/70 text-white/80 text-sm font-black tracking-[0.25em]
-                             hover:bg-[#3a0000]/90 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                  className="relative w-full py-4 rounded-full bg-[#5a0e0e] text-white/90 text-sm font-black tracking-[0.25em]
+                             shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_2px_6px_rgba(0,0,0,0.35)]
+                             hover:bg-[#6d1212] disabled:opacity-40 disabled:cursor-not-allowed transition-all overflow-hidden"
                 >
-                  ENTER AS ADMIN
+                  <span className="grain-overlay absolute inset-0 rounded-full opacity-40" />
+                  <span className="relative">ENTER AS ADMIN</span>
                 </button>
                 <button
                   type="button"
