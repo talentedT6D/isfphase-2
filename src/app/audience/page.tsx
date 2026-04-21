@@ -189,8 +189,8 @@ export default function AudiencePage() {
           className="absolute z-20 h-32 w-auto"
           style={{ top: 24, left: 36 }}
         />
-        <header className="relative z-10 flex items-center justify-end px-10 pt-8 shrink-0 h-[30vh] min-h-[220px]">
-          <div className="text-[#e8d44d]/80 text-base font-bold italic tracking-wide">
+        <header className="relative z-10 flex items-start justify-end px-10 pt-10 shrink-0 h-[30vh] min-h-[220px]">
+          <div className="text-[#e8d44d]/80 text-base font-bold italic tracking-wide pt-2">
             JUDGE PORTAL
           </div>
         </header>
@@ -271,10 +271,10 @@ export default function AudiencePage() {
         className="absolute z-20 h-44 w-auto"
         style={{ top: 42, left: 36 }}
       />
-      <header className="relative z-10 flex items-center justify-between px-10 pt-8 shrink-0 h-[30vh] min-h-[220px]">
+      <header className="relative z-10 flex items-start justify-between px-10 pt-10 shrink-0 h-[30vh] min-h-[220px]">
         <div aria-hidden className="h-16 w-44" />
 
-        <div className="text-[#e8d44d]/70 text-xs font-bold tracking-[0.15em]">
+        <div className="text-[#e8d44d]/80 text-xs font-bold tracking-[0.2em] pt-2">
           NOW JUDGING &mdash; ENTRY #{String(videoIndex + 1).padStart(2, "0")}
         </div>
 
@@ -286,7 +286,7 @@ export default function AudiencePage() {
           >
             {userName.charAt(0).toUpperCase()}
           </button>
-          <span className="text-[#e8d44d]/60 text-[10px] tracking-wider">
+          <span className="text-[#e8d44d]/80 text-[11px] tracking-wider font-bold">
             {userName}
           </span>
         </div>

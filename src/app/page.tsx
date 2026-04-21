@@ -75,8 +75,8 @@ export default function LoginPage() {
         className="absolute z-20 h-32 w-auto"
         style={{ top: 24, left: 36 }}
       />
-      <header className="relative z-10 flex items-center justify-end px-10 pt-8 shrink-0 h-[30vh] min-h-[220px]">
-        <div className="text-white/80 text-base font-bold italic tracking-wide">
+      <header className="relative z-10 flex items-start justify-end px-10 pt-10 shrink-0 h-[30vh] min-h-[220px]">
+        <div className="text-white/80 text-base font-bold italic tracking-wide pt-2">
           JUDGE PORTAL &ndash; LOGIN
         </div>
       </header>
