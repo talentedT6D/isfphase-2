@@ -183,9 +183,14 @@ export default function AudiencePage() {
         <div className="absolute inset-0 grain-overlay opacity-10" />
 
         {/* Header */}
-        <header className="relative z-10 flex items-center justify-between px-8 py-4">
-          <img src="/isf-logo-vertical.png" alt="ISF Logo" className="h-24 w-auto" />
-          <div className="text-[#e8d44d]/80 text-sm font-bold italic tracking-wide">
+        <img
+          src="/isf-logo-vertical.png"
+          alt="ISF Logo"
+          className="absolute z-20 h-44 w-auto"
+          style={{ top: 42, left: 36 }}
+        />
+        <header className="relative z-10 flex items-center justify-end px-10 pt-8">
+          <div className="text-[#e8d44d]/80 text-base font-bold italic tracking-wide">
             JUDGE PORTAL
           </div>
         </header>
@@ -260,8 +265,14 @@ export default function AudiencePage() {
       <div className="absolute inset-0 grain-overlay opacity-10" />
 
       {/* Header */}
-      <header className="relative z-10 flex items-center justify-between px-8 py-4 shrink-0">
-        <img src="/isf-logo-vertical.png" alt="ISF Logo" className="h-24 w-auto" />
+      <img
+        src="/isf-logo-vertical.png"
+        alt="ISF Logo"
+        className="absolute z-20 h-44 w-auto"
+        style={{ top: 42, left: 36 }}
+      />
+      <header className="relative z-10 flex items-center justify-between px-10 pt-8 shrink-0">
+        <div aria-hidden className="h-16 w-44" />
 
         <div className="text-[#e8d44d]/70 text-xs font-bold tracking-[0.15em]">
           NOW JUDGING &mdash; ENTRY #{String(videoIndex + 1).padStart(2, "0")}

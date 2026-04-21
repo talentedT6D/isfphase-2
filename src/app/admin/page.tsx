@@ -739,9 +739,15 @@ export default function AdminPage() {
         />
         <div className="absolute inset-0 grain-overlay opacity-10 pointer-events-none" />
 
+        <img
+          src="/isf-logo-vertical.png"
+          alt="ISF Logo"
+          className="absolute z-20 h-44 w-auto"
+          style={{ top: 42, left: 36 }}
+        />
         <div className="relative z-10 flex items-start justify-between px-8 py-6 h-full">
-          {/* ISF Logo - larger for admin */}
-          <img src="/isf-logo-vertical.png" alt="ISF Logo" className="h-24 w-auto" />
+          {/* Spacer to preserve flex layout where the logo used to sit */}
+          <div aria-hidden className="h-24 w-44" />
 
           {/* Center: Large ISF Horizontal Logo */}
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
