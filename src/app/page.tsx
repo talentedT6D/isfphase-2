@@ -43,13 +43,13 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] flex flex-col relative overflow-hidden">
+    <div className="min-h-screen bg-[#5a0404] flex flex-col relative overflow-hidden">
       {/* Red gradient background */}
       <div
         className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse 80% 50% at 50% 75%, #c41a1a 0%, #8b0000 35%, #3a0000 60%, #0a0a0a 100%)",
+            "radial-gradient(ellipse 110% 90% at 50% 60%, #d41414 0%, #a80c0c 45%, #6a0606 80%, #3a0202 100%)",
         }}
       />
 
