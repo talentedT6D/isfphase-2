@@ -1,0 +1,194 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+
+const ADMIN_NAME = "admin";
+const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || "admin123";
+
+export default function LoginPage() {
+  const router = useRouter();
+  const [name, setName] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const handleNameSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmed = name.trim();
+    if (!trimmed) return;
+
+    if (trimmed.toLowerCase() === ADMIN_NAME.toLowerCase()) {
+      setShowPassword(true);
+      setError("");
+    } else {
+      localStorage.setItem("user-name", trimmed);
+      localStorage.setItem(
+        "user-id",
+        `user-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`
+      );
+      router.push("/audience");
+    }
+  };
+
+  const handlePasswordSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password === ADMIN_PASSWORD) {
+      localStorage.setItem("user-name", ADMIN_NAME);
+      localStorage.setItem("user-role", "admin");
+      router.push("/admin");
+    } else {
+      setError("Incorrect password");
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-[#0a0a0a] flex flex-col relative overflow-hidden">
+      {/* Red gradient background */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(ellipse 80% 50% at 50% 75%, #c41a1a 0%, #8b0000 35%, #3a0000 60%, #0a0a0a 100%)",
+        }}
+      />
+
+      {/* Header bar shape (PNG with transparency) */}
+      <img
+        src="/header-bar.png"
+        alt=""
+        className="absolute top-0 left-0 w-full pointer-events-none"
+        style={{
+          height: "30%",
+          objectFit: "fill",
+          filter: "sepia(1) saturate(3) brightness(0.12) hue-rotate(350deg)",
+        }}
+      />
+
+      {/* Grain overlay */}
+      <div className="absolute inset-0 grain-overlay opacity-10" />
+
+      {/* Header */}
+      <header className="relative z-10 flex items-center justify-between px-8 py-4">
+        <img
+          src="/isf-logo-vertical.png"
+          alt="ISF Logo"
+          className="h-16 w-auto"
+        />
+        <div className="text-white/80 text-sm font-bold italic tracking-wide">
+          JUDGE PORTAL &ndash; LOGIN
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <div className="relative z-10 flex-1 flex items-center justify-center px-4">
+        <div className="w-full max-w-2xl text-center">
+          {/* ISF Horizontal Logo */}
+          <div className="mb-10">
+            <img
+              src="/isf-horizontal-logo.png"
+              alt="Indian Scroll Festival"
+              className="w-full max-w-xl mx-auto"
+            />
+          </div>
+
+          {/* Form */}
+          <div className="max-w-sm mx-auto">
+            {!showPassword ? (
+              <form onSubmit={handleNameSubmit} className="space-y-4">
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="ENTER YOUR NAME"
+                  autoFocus
+                  className="w-full px-6 py-4 bg-transparent border-2 border-[#e8d44d]/40 rounded-none
+                             text-[#e8d44d] placeholder-[#e8d44d]/30 text-center text-sm font-bold
+                             tracking-[0.2em] focus:outline-none focus:border-[#e8d44d] transition-colors"
+                />
+                <button
+                  type="submit"
+                  disabled={!name.trim()}
+                  className="w-full py-4 bg-[#e8d44d] text-[#1a0000] text-sm font-black tracking-[0.25em]
+                             hover:bg-[#f0dc5a] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                >
+                  JOIN AS JUDGE
+                </button>
+              </form>
+            ) : (
+              <form onSubmit={handlePasswordSubmit} className="space-y-4">
+                <div className="mb-2">
+                  <span className="inline-flex items-center border border-[#e8d44d]/40 text-[#e8d44d] px-5 py-1.5 text-[10px] font-bold tracking-[0.2em]">
+                    ADMIN ACCESS
+                  </span>
+                </div>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    setError("");
+                  }}
+                  placeholder="ENTER PASSWORD"
+                  autoFocus
+                  className="w-full px-6 py-4 bg-transparent border-2 border-[#e8d44d]/40 rounded-none
+                             text-[#e8d44d] placeholder-[#e8d44d]/30 text-center text-sm font-bold
+                             tracking-[0.2em] focus:outline-none focus:border-[#e8d44d] transition-colors"
+                />
+                {error && (
+                  <p className="text-red-300 text-xs">{error}</p>
+                )}
+                <button
+                  type="submit"
+                  disabled={!password}
+                  className="w-full py-4 bg-[#e8d44d] text-[#1a0000] text-sm font-black tracking-[0.25em]
+                             hover:bg-[#f0dc5a] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                >
+                  ENTER AS ADMIN
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowPassword(false);
+                    setPassword("");
+                    setError("");
+                    setName("");
+                  }}
+                  className="w-full py-2 text-[#e8d44d]/40 hover:text-[#e8d44d]/70 text-[11px] tracking-[0.1em] transition-colors"
+                >
+                  Go back
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <footer className="relative z-10 flex items-center justify-end px-8 py-5 gap-4">
+        <a
+          href="https://instagram.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-[#e8d44d]/40 hover:text-[#e8d44d]/70 transition-colors"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="5" />
+            <circle cx="12" cy="12" r="5" />
+            <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
+          </svg>
+        </a>
+        <a
+          href="https://x.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-[#e8d44d]/40 hover:text-[#e8d44d]/70 transition-colors"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+          </svg>
+        </a>
+      </footer>
+    </div>
+  );
+}
