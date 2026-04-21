@@ -742,8 +742,8 @@ export default function AdminPage() {
         <img
           src="/isf-logo-vertical.png"
           alt="ISF Logo"
-          className="absolute z-20 h-32 w-auto"
-          style={{ top: 24, left: 36 }}
+          className="absolute z-20"
+          style={{ top: 24, left: 36, height: "128px", width: "auto" }}
         />
         <div className="relative z-10 flex items-start justify-between px-8 py-6 h-full">
           {/* Spacer to preserve flex layout where the logo used to sit */}
