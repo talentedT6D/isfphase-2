@@ -224,61 +224,71 @@ export default function AdminPage() {
       <>
         <div className="flex items-start justify-between mb-6">
           <div>
-            <h1 className="text-4xl font-black tracking-wider text-[#1a1a1a]">
+            <h1 className="text-5xl font-black tracking-wider text-white">
               JUDGING SUMMARY
             </h1>
-            <p className="text-sm text-[#1a1a1a]/50 tracking-[0.1em] mt-1 font-bold">
+            <p className="text-sm text-white/70 tracking-[0.15em] mt-1 font-bold">
               {adminName.toUpperCase()}
             </p>
           </div>
           <button
             onClick={exportCSV}
-            className="flex items-center gap-2 px-5 py-2.5 bg-[#1a1a1a] text-[#e8d44d] text-[11px] font-bold tracking-[0.15em] hover:bg-[#333] transition-colors"
+            className="flex items-center gap-2 px-5 py-2.5 bg-[#1a1a1a] text-[#e8d44d] text-[11px] font-bold tracking-[0.15em] hover:bg-[#333] transition-colors rounded"
           >
             &darr; EXPORT CSV
           </button>
         </div>
 
         {/* Stat Cards */}
-        <div className="grid grid-cols-3 gap-4 mb-8">
-          <div className="bg-[#1a1a1a]/5 border border-[#1a1a1a]/10 p-6">
-            <div className="text-[10px] tracking-[0.15em] text-[#1a1a1a]/50 mb-2 font-bold">
+        <div className="grid grid-cols-3 gap-8 mb-8">
+          <div>
+            <div className="text-[10px] tracking-[0.2em] text-[#e8d44d]/80 mb-2 font-bold">
               TOTAL REELS JUDGED
             </div>
-            <div className="text-5xl font-black text-[#1a1a1a]">
+            <div className="text-6xl font-black text-[#e8d44d] tabular-nums">
               {String(totalJudged).padStart(2, "0")}
             </div>
-            <div className="text-sm text-[#1a1a1a]/40 mt-1">
-              of {PLAYLIST.length} assigned
+            <div className="text-xs text-[#e8d44d]/60 mt-1 tracking-wider font-bold">
+              OF {PLAYLIST.length} ASSIGNED
             </div>
           </div>
-          <div className="bg-[#1a1a1a]/5 border border-[#1a1a1a]/10 p-6">
-            <div className="text-[10px] tracking-[0.15em] text-[#1a1a1a]/50 mb-2 font-bold">
+          <div>
+            <div className="text-[10px] tracking-[0.2em] text-[#e8d44d]/80 mb-2 font-bold">
               AVERAGE SCORE GIVEN
             </div>
-            <div className="text-5xl font-black text-[#1a1a1a]">
+            <div className="text-6xl font-black text-[#e8d44d] tabular-nums">
               {String(overallAvg).padStart(2, "0")}
             </div>
-            <div className="text-sm text-[#1a1a1a]/40 mt-1">OUT OF 100</div>
+            <div className="text-xs text-[#e8d44d]/60 mt-1 tracking-wider font-bold">
+              OUT OF 100
+            </div>
           </div>
-          <div className="bg-[#1a1a1a]/5 border border-[#1a1a1a]/10 p-6">
-            <div className="text-[10px] tracking-[0.15em] text-[#1a1a1a]/50 mb-2 font-bold">
+          <div>
+            <div className="text-[10px] tracking-[0.2em] text-[#e8d44d]/80 mb-2 font-bold">
               REELS REMAINING
             </div>
-            <div className="text-5xl font-black text-[#1a1a1a]">
+            <div className="text-6xl font-black text-[#e8d44d] tabular-nums">
               {String(remaining).padStart(2, "0")}
             </div>
-            <div className="text-sm text-[#1a1a1a]/40 mt-1">REMAINING</div>
+            <div className="text-xs text-[#e8d44d]/60 mt-1 tracking-wider font-bold">
+              REMAINING
+            </div>
           </div>
         </div>
 
-        {/* Judged Entries */}
-        <div>
+        {/* Judged Entries - yellow panel */}
+        <div
+          className="rounded-xl p-6"
+          style={{
+            background:
+              "linear-gradient(160deg, #f0dc5a 0%, #e8d44d 50%, #c7b33e 100%)",
+          }}
+        >
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-sm font-black tracking-[0.15em] text-[#1a1a1a]">
+            <h2 className="text-xl font-black tracking-[0.1em] text-[#1a1a1a]">
               JUDGED ENTRIES
             </h2>
-            <span className="text-sm text-[#1a1a1a]/40">
+            <span className="text-sm text-[#1a1a1a]/60 font-bold">
               {filteredJudgedRows.length} entries
             </span>
           </div>
@@ -288,10 +298,10 @@ export default function AdminPage() {
               placeholder="Search by title or handle..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full px-4 py-3 border border-[#1a1a1a]/15 bg-white/50 text-sm text-[#1a1a1a] placeholder-[#1a1a1a]/30 focus:outline-none focus:border-[#1a1a1a]/40 transition-colors"
+              className="w-full px-4 py-3 rounded-full border border-[#1a1a1a]/25 bg-white/40 text-sm text-[#1a1a1a] placeholder-[#1a1a1a]/40 focus:outline-none focus:border-[#1a1a1a]/60 transition-colors"
             />
           </div>
-          <div className="border border-[#1a1a1a]/10 bg-white/30">
+          <div>
             <div className="grid grid-cols-[60px_1fr_100px_180px_140px] px-5 py-3 border-b border-[#1a1a1a]/10 text-[10px] tracking-[0.15em] text-[#1a1a1a]/50 font-bold bg-[#1a1a1a] text-[#e8d44d]">
               <span>#</span>
               <span>ENTRY</span>
@@ -358,29 +368,36 @@ export default function AdminPage() {
       <>
         <div className="flex items-start justify-between mb-6">
           <div>
-            <h1 className="text-4xl font-black tracking-wider text-[#1a1a1a]">
+            <h1 className="text-5xl font-black tracking-wider text-white">
               SUBMISSIONS
             </h1>
-            <p className="text-sm text-[#1a1a1a]/50 tracking-[0.1em] mt-1 font-bold">
+            <p className="text-sm text-white/70 tracking-[0.15em] mt-1 font-bold">
               ALL VIDEO ENTRIES
             </p>
           </div>
-          <span className="text-sm text-[#1a1a1a]/40">
+          <span className="text-sm text-[#e8d44d]/80 font-bold">
             {PLAYLIST.length} total submissions
           </span>
         </div>
 
-        <div className="mb-4">
-          <input
-            type="text"
-            placeholder="Search by title..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full px-4 py-3 border border-[#1a1a1a]/15 bg-white/50 text-sm text-[#1a1a1a] placeholder-[#1a1a1a]/30 focus:outline-none focus:border-[#1a1a1a]/40 transition-colors"
-          />
-        </div>
+        <div
+          className="rounded-xl p-6"
+          style={{
+            background:
+              "linear-gradient(160deg, #f0dc5a 0%, #e8d44d 50%, #c7b33e 100%)",
+          }}
+        >
+          <div className="mb-4">
+            <input
+              type="text"
+              placeholder="Search by title..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full px-4 py-3 rounded-full border border-[#1a1a1a]/25 bg-white/40 text-sm text-[#1a1a1a] placeholder-[#1a1a1a]/40 focus:outline-none focus:border-[#1a1a1a]/60 transition-colors"
+            />
+          </div>
 
-        <div className="border border-[#1a1a1a]/10 bg-white/30">
+          <div>
           <div className="grid grid-cols-[60px_1fr_100px_100px_140px] px-5 py-3 border-b border-[#1a1a1a]/10 text-[10px] tracking-[0.15em] font-bold bg-[#1a1a1a] text-[#e8d44d]">
             <span>#</span>
             <span>VIDEO TITLE</span>
@@ -431,11 +448,12 @@ export default function AdminPage() {
               </div>
             ))
           )}
+          </div>
+          {renderPagination(
+            filteredSubmissions.length,
+            submissionsPagination.totalPages
+          )}
         </div>
-        {renderPagination(
-          filteredSubmissions.length,
-          submissionsPagination.totalPages
-        )}
       </>
     );
   }
@@ -450,29 +468,36 @@ export default function AdminPage() {
       <>
         <div className="flex items-start justify-between mb-6">
           <div>
-            <h1 className="text-4xl font-black tracking-wider text-[#1a1a1a]">
+            <h1 className="text-5xl font-black tracking-wider text-white">
               JUDGES
             </h1>
-            <p className="text-sm text-[#1a1a1a]/50 tracking-[0.1em] mt-1 font-bold">
+            <p className="text-sm text-white/70 tracking-[0.15em] mt-1 font-bold">
               AUDIENCE MEMBERS
             </p>
           </div>
-          <span className="text-sm text-[#1a1a1a]/40">
+          <span className="text-sm text-[#e8d44d]/80 font-bold">
             {judges.length} judges
           </span>
         </div>
 
-        <div className="mb-4">
-          <input
-            type="text"
-            placeholder="Search by judge name..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full px-4 py-3 border border-[#1a1a1a]/15 bg-white/50 text-sm text-[#1a1a1a] placeholder-[#1a1a1a]/30 focus:outline-none focus:border-[#1a1a1a]/40 transition-colors"
-          />
-        </div>
+        <div
+          className="rounded-xl p-6"
+          style={{
+            background:
+              "linear-gradient(160deg, #f0dc5a 0%, #e8d44d 50%, #c7b33e 100%)",
+          }}
+        >
+          <div className="mb-4">
+            <input
+              type="text"
+              placeholder="Search by judge name..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full px-4 py-3 rounded-full border border-[#1a1a1a]/25 bg-white/40 text-sm text-[#1a1a1a] placeholder-[#1a1a1a]/40 focus:outline-none focus:border-[#1a1a1a]/60 transition-colors"
+            />
+          </div>
 
-        <div className="border border-[#1a1a1a]/10 bg-white/30">
+          <div>
           <div className="grid grid-cols-[60px_1fr_120px_100px_180px] px-5 py-3 border-b border-[#1a1a1a]/10 text-[10px] tracking-[0.15em] font-bold bg-[#1a1a1a] text-[#e8d44d]">
             <span>#</span>
             <span>JUDGE</span>
@@ -579,11 +604,12 @@ export default function AdminPage() {
               );
             })
           )}
+          </div>
+          {renderPagination(
+            filteredJudges.length,
+            judgesPagination.totalPages
+          )}
         </div>
-        {renderPagination(
-          filteredJudges.length,
-          judgesPagination.totalPages
-        )}
       </>
     );
   }
@@ -609,29 +635,36 @@ export default function AdminPage() {
       <>
         <div className="flex items-start justify-between mb-6">
           <div>
-            <h1 className="text-4xl font-black tracking-wider text-[#1a1a1a]">
+            <h1 className="text-5xl font-black tracking-wider text-white">
               LEADERBOARD
             </h1>
-            <p className="text-sm text-[#1a1a1a]/50 tracking-[0.1em] mt-1 font-bold">
+            <p className="text-sm text-white/70 tracking-[0.15em] mt-1 font-bold">
               VIDEOS RANKED BY SCORE
             </p>
           </div>
-          <span className="text-sm text-[#1a1a1a]/40">
+          <span className="text-sm text-[#e8d44d]/80 font-bold">
             {rankedVideos.length} ranked entries
           </span>
         </div>
 
-        <div className="mb-4">
-          <input
-            type="text"
-            placeholder="Search by video title..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full px-4 py-3 border border-[#1a1a1a]/15 bg-white/50 text-sm text-[#1a1a1a] placeholder-[#1a1a1a]/30 focus:outline-none focus:border-[#1a1a1a]/40 transition-colors"
-          />
-        </div>
+        <div
+          className="rounded-xl p-6"
+          style={{
+            background:
+              "linear-gradient(160deg, #f0dc5a 0%, #e8d44d 50%, #c7b33e 100%)",
+          }}
+        >
+          <div className="mb-4">
+            <input
+              type="text"
+              placeholder="Search by video title..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full px-4 py-3 rounded-full border border-[#1a1a1a]/25 bg-white/40 text-sm text-[#1a1a1a] placeholder-[#1a1a1a]/40 focus:outline-none focus:border-[#1a1a1a]/60 transition-colors"
+            />
+          </div>
 
-        <div className="border border-[#1a1a1a]/10 bg-white/30">
+          <div>
           <div className="grid grid-cols-[60px_1fr_120px_100px_180px] px-5 py-3 border-b border-[#1a1a1a]/10 text-[10px] tracking-[0.15em] font-bold bg-[#1a1a1a] text-[#e8d44d]">
             <span>RANK</span>
             <span>VIDEO</span>
@@ -686,11 +719,12 @@ export default function AdminPage() {
               );
             })
           )}
+          </div>
+          {renderPagination(
+            filteredRanked.length,
+            leaderboardPagination.totalPages
+          )}
         </div>
-        {renderPagination(
-          filteredRanked.length,
-          leaderboardPagination.totalPages
-        )}
       </>
     );
   }
@@ -724,65 +758,47 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden">
-      {/* Dark Red Header with header bar shape over yellow bg */}
-      <header className="relative shrink-0" style={{ height: "280px" }}>
-        {/* Header bar shape image - dark tinted, transparent areas reveal yellow */}
-        <img
-          src="/header-bar.png"
-          alt=""
-          className="absolute top-0 left-0 w-full h-full pointer-events-none"
-          style={{
-            objectFit: "fill",
-            filter: "sepia(1) saturate(3) brightness(0.12) hue-rotate(350deg)",
-          }}
-        />
-        <div className="absolute inset-0 grain-overlay opacity-10 pointer-events-none" />
+    <div className="h-screen flex flex-col overflow-hidden bg-[#5a0404] relative">
+      {/* Red gradient background */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(ellipse 110% 90% at 50% 60%, #d41414 0%, #a80c0c 45%, #6a0606 80%, #3a0202 100%)",
+        }}
+      />
+      <div className="absolute inset-0 grain-overlay opacity-10 pointer-events-none" />
 
+      {/* Header */}
+      <header className="relative shrink-0 z-10 px-10 pt-6 pb-3 flex items-start justify-between">
         <img
-          src="/isf-logo-vertical.png"
-          alt="ISF Logo"
-          className="absolute z-20"
-          style={{ top: 24, left: 36, height: "128px", width: "auto" }}
+          src="/isf-horizontal-logo.png"
+          alt="Indian Scroll Festival"
+          style={{ height: "56px", width: "auto" }}
         />
-        <div className="relative z-10 flex items-start justify-between px-8 py-6 h-full">
-          {/* Spacer to preserve flex layout where the logo used to sit */}
-          <div aria-hidden className="h-24 w-44" />
-
-          {/* Center: Large ISF Horizontal Logo */}
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-            <img
-              src="/isf-horizontal-logo.png"
-              alt="Indian Scroll Festival"
-              className="w-[500px] max-w-[40vw]"
-            />
+        <div className="text-right">
+          <div className="text-white/85 text-base font-bold italic tracking-wide">
+            ADMIN PANEL
           </div>
-
-          {/* Right: Admin Panel Label */}
-          <div className="text-right">
-            <div className="text-white/80 text-sm font-bold italic tracking-wide">
-              ADMIN PANEL
+          <div className="flex items-center gap-2 mt-2 justify-end">
+            <div className="w-9 h-9 rounded-full bg-[#1a1a1a] border-2 border-[#e8d44d]/40 flex items-center justify-center text-sm font-bold text-[#e8d44d]">
+              {adminName.charAt(0).toUpperCase()}
             </div>
-            <div className="flex items-center gap-2 mt-3 justify-end">
-              <div className="w-9 h-9 rounded-full bg-[#1a1a1a] border-2 border-[#e8d44d]/30 flex items-center justify-center text-sm font-bold text-[#e8d44d]">
-                {adminName.charAt(0).toUpperCase()}
-              </div>
-              <span className="text-[#e8d44d]/60 text-xs">
-                {adminName}
-              </span>
-            </div>
+            <span className="text-[#e8d44d]/80 text-xs font-bold tracking-wider">
+              {adminName}
+            </span>
           </div>
         </div>
       </header>
 
-      {/* Content Area - Yellow/Gold Background */}
-      <div className="flex-1 flex min-h-0 bg-[#e8d44d]">
+      {/* Content Area */}
+      <div className="relative flex-1 flex min-h-0 z-10">
         {/* Sidebar */}
-        <aside className="w-[200px] border-r border-[#1a1a1a]/10 py-6 px-4 flex flex-col justify-between shrink-0">
+        <aside className="w-[220px] py-6 px-5 flex flex-col justify-between shrink-0">
           <div>
             {sidebarItems.map((group) => (
               <div key={group.section}>
-                <div className="text-[10px] tracking-[0.15em] text-[#1a1a1a]/40 mb-3 mt-5 first:mt-0 px-2 font-bold">
+                <div className="text-[10px] tracking-[0.2em] text-white/50 mb-3 mt-5 first:mt-0 font-bold">
                   {group.section}
                 </div>
                 <nav className="space-y-1">
@@ -790,10 +806,10 @@ export default function AdminPage() {
                     <button
                       key={item.key}
                       onClick={() => setActiveView(item.key)}
-                      className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm transition-colors text-left font-bold tracking-wide ${
+                      className={`w-full flex items-center gap-3 px-3 py-2 text-sm transition-colors text-left font-bold tracking-wide ${
                         activeView === item.key
-                          ? "bg-[#1a1a1a] text-[#e8d44d]"
-                          : "text-[#1a1a1a]/60 hover:text-[#1a1a1a] hover:bg-[#1a1a1a]/5"
+                          ? "bg-black/40 text-[#e8d44d] rounded"
+                          : "text-[#e8d44d]/75 hover:text-[#e8d44d] hover:bg-black/20 rounded"
                       }`}
                     >
                       {item.label}
@@ -806,7 +822,7 @@ export default function AdminPage() {
 
           <button
             onClick={handleLogout}
-            className="flex items-center gap-3 px-3 py-2.5 text-[#1a1a1a]/50 hover:text-[#1a1a1a] text-sm transition-colors font-bold"
+            className="flex items-center gap-3 px-3 py-2 text-[#e8d44d]/70 hover:text-[#e8d44d] text-sm transition-colors font-bold"
           >
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
               <path d="M6 2H4a2 2 0 00-2 2v8a2 2 0 002 2h2M11 11l3-3-3-3M6 8h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
