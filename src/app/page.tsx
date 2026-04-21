@@ -6,10 +6,12 @@ import { useRouter } from "next/navigation";
 const ADMIN_NAME = "admin";
 const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || "admin123";
 
+type Mode = "choice" | "name" | "password";
+
 export default function LoginPage() {
   const router = useRouter();
+  const [mode, setMode] = useState<Mode>("choice");
   const [name, setName] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
@@ -18,17 +20,12 @@ export default function LoginPage() {
     const trimmed = name.trim();
     if (!trimmed) return;
 
-    if (trimmed.toLowerCase() === ADMIN_NAME.toLowerCase()) {
-      setShowPassword(true);
-      setError("");
-    } else {
-      localStorage.setItem("user-name", trimmed);
-      localStorage.setItem(
-        "user-id",
-        `user-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`
-      );
-      router.push("/audience");
-    }
+    localStorage.setItem("user-name", trimmed);
+    localStorage.setItem(
+      "user-id",
+      `user-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`
+    );
+    router.push("/audience");
   };
 
   const handlePasswordSubmit = (e: React.FormEvent) => {
@@ -40,6 +37,13 @@ export default function LoginPage() {
     } else {
       setError("Incorrect password");
     }
+  };
+
+  const goBack = () => {
+    setMode("choice");
+    setName("");
+    setPassword("");
+    setError("");
   };
 
   return (
@@ -63,7 +67,10 @@ export default function LoginPage() {
           alt="Indian Scroll Festival"
           style={{ height: "40px", width: "auto" }}
         />
-        <div className="text-white text-2xl font-bold tracking-[0.2em]" style={{ fontFamily: '"obviously-narrow", "obviously", sans-serif' }}>
+        <div
+          className="text-white text-2xl font-bold tracking-[0.2em]"
+          style={{ fontFamily: '"obviously-narrow", "obviously", sans-serif' }}
+        >
           JUDGE PORTAL
         </div>
       </header>
@@ -82,7 +89,31 @@ export default function LoginPage() {
 
           {/* Form */}
           <div className="max-w-sm mx-auto">
-            {!showPassword ? (
+            {mode === "choice" && (
+              <div className="space-y-4">
+                <button
+                  type="button"
+                  onClick={() => setMode("password")}
+                  className="w-full py-4 bg-transparent border-2 border-[#e8d44d] rounded-full
+                             text-[#e8d44d] text-sm font-black tracking-[0.25em]
+                             hover:bg-[#e8d44d]/10 transition-colors"
+                >
+                  ADMIN
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMode("name")}
+                  className="relative w-full py-4 rounded-full bg-[#1a1a1a] text-white text-sm font-black tracking-[0.25em]
+                             shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_2px_6px_rgba(0,0,0,0.35)]
+                             hover:bg-[#2a2a2a] transition-all overflow-hidden"
+                >
+                  <span className="grain-overlay absolute inset-0 rounded-full opacity-40" />
+                  <span className="relative">JOIN AS JUDGE</span>
+                </button>
+              </div>
+            )}
+
+            {mode === "name" && (
               <form onSubmit={handleNameSubmit} className="space-y-4">
                 <input
                   type="text"
@@ -104,8 +135,17 @@ export default function LoginPage() {
                   <span className="grain-overlay absolute inset-0 rounded-full opacity-40" />
                   <span className="relative">JOIN AS JUDGE</span>
                 </button>
+                <button
+                  type="button"
+                  onClick={goBack}
+                  className="w-full py-2 text-[#e8d44d]/60 hover:text-[#e8d44d] text-[11px] tracking-[0.1em] transition-colors"
+                >
+                  Go back
+                </button>
               </form>
-            ) : (
+            )}
+
+            {mode === "password" && (
               <form onSubmit={handlePasswordSubmit} className="space-y-4">
                 <div className="mb-2">
                   <span className="inline-flex items-center border border-[#e8d44d]/40 text-[#e8d44d] px-5 py-1.5 text-[10px] font-bold tracking-[0.2em] rounded-full">
@@ -125,9 +165,7 @@ export default function LoginPage() {
                              text-[#e8d44d] placeholder-[#e8d44d]/70 text-center text-sm font-bold
                              tracking-[0.2em] focus:outline-none focus:border-[#e8d44d] transition-colors"
                 />
-                {error && (
-                  <p className="text-red-300 text-xs">{error}</p>
-                )}
+                {error && <p className="text-red-300 text-xs">{error}</p>}
                 <button
                   type="submit"
                   disabled={!password}
@@ -140,13 +178,8 @@ export default function LoginPage() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => {
-                    setShowPassword(false);
-                    setPassword("");
-                    setError("");
-                    setName("");
-                  }}
-                  className="w-full py-2 text-[#e8d44d]/40 hover:text-[#e8d44d]/70 text-[11px] tracking-[0.1em] transition-colors"
+                  onClick={goBack}
+                  className="w-full py-2 text-[#e8d44d]/60 hover:text-[#e8d44d] text-[11px] tracking-[0.1em] transition-colors"
                 >
                   Go back
                 </button>
