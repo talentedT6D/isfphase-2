@@ -345,11 +345,11 @@ export default function AudiencePage() {
           <div className="space-y-5">
             {/* Entry Info */}
             <div>
-              <h2 className="text-[#e8d44d] text-[32px] font-black tracking-wider leading-tight">
+              <h2 className="text-white text-5xl font-black italic tracking-wider leading-tight uppercase">
                 {currentVideo?.title || "Untitled"}
               </h2>
-              <div className="flex items-center gap-3 mt-2 text-[#e8d44d]/60 text-sm">
-                <span>@creator</span>
+              <div className="flex items-center gap-3 mt-2 text-white/70 text-sm font-bold tracking-widest">
+                <span>@CREATOR</span>
                 <span>&bull;</span>
                 <span>{duration > 0 ? formatTime(duration) : "--:--"}</span>
               </div>
@@ -357,9 +357,9 @@ export default function AudiencePage() {
 
             {/* Progress Bar */}
             <div>
-              <div className="w-full h-[6px] bg-[#e8d44d]/20 rounded-full overflow-hidden">
+              <div className="w-full h-[6px] bg-white/20 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-[#e8d44d] rounded-full transition-all duration-200"
+                  className="h-full bg-white rounded-full transition-all duration-200"
                   style={{
                     width:
                       duration > 0
@@ -368,8 +368,8 @@ export default function AudiencePage() {
                   }}
                 />
               </div>
-              <div className="flex justify-end mt-1">
-                <span className="text-[#e8d44d]/50 text-[10px]">
+              <div className="flex justify-start mt-1">
+                <span className="text-white/60 text-[10px]">
                   {formatTime(currentTime)}
                 </span>
               </div>
@@ -377,16 +377,18 @@ export default function AudiencePage() {
 
             {/* Score Section */}
             <div className="pt-4">
-              <div className="flex items-baseline gap-2 mb-6">
-                <span className="text-[#e8d44d] text-6xl font-black tabular-nums leading-none">
+              <div className="flex items-baseline mb-6">
+                <span className="text-[#e8d44d] text-7xl font-black italic tabular-nums leading-none">
                   {score}
                 </span>
-                <span className="text-[#e8d44d]/40 text-2xl font-light">/100</span>
+                <span className="text-[#e8d44d] text-5xl font-black italic leading-none">
+                  /100
+                </span>
               </div>
 
               {/* Slider */}
               <div>
-                <div className="flex justify-between text-[10px] text-[#e8d44d]/50 mb-2 font-bold tracking-wider">
+                <div className="flex justify-between text-[11px] text-white/80 mb-2 font-bold tracking-wider">
                   <span>1</span>
                   <span>25</span>
                   <span>50</span>
@@ -402,11 +404,11 @@ export default function AudiencePage() {
                   onChange={(e) => setScore(parseInt(e.target.value))}
                   className="judge-slider w-full h-[3px] rounded-full appearance-none cursor-pointer"
                   style={{
-                    background: `linear-gradient(to right, #e8d44d 0%, #e8d44d ${((score - 1) / 99) * 100}%, rgba(232,212,77,0.2) ${((score - 1) / 99) * 100}%)`,
+                    background: `linear-gradient(to right, #e8d44d 0%, #e8d44d ${((score - 1) / 99) * 100}%, rgba(255,255,255,0.25) ${((score - 1) / 99) * 100}%)`,
                   }}
                   aria-label="Score from 1 to 100"
                 />
-                <div className="text-center text-[10px] tracking-[0.2em] text-[#e8d44d]/60 mt-2 font-bold">
+                <div className="text-center text-[11px] tracking-[0.2em] text-[#e8d44d] mt-3 font-black">
                   {getScoreLabel(score)}
                 </div>
               </div>
@@ -417,12 +419,12 @@ export default function AudiencePage() {
               <button
                 onClick={submitScore}
                 disabled={submitStatus === "success"}
-                className={`w-full py-4 text-[12px] font-bold tracking-[0.25em] transition-colors rounded ${
+                className={`w-full py-4 rounded-full text-[13px] font-black tracking-[0.25em] transition-colors ${
                   submitStatus === "success"
                     ? "bg-green-700 text-white"
                     : submitStatus === "error"
                       ? "bg-red-700 text-white"
-                      : "bg-[#e8d44d] text-[#1a0000] hover:bg-[#f0dc5a]"
+                      : "bg-[#e8d44d] text-[#8b0000] hover:bg-[#f0dc5a]"
                 }`}
               >
                 {submitStatus === "success"
@@ -439,7 +441,7 @@ export default function AudiencePage() {
               <button
                 onClick={skipEntry}
                 disabled={videoIndex >= PLAYLIST.length - 1}
-                className="w-full py-4 border border-[#e8d44d]/30 text-[#e8d44d]/70 text-[12px] font-bold tracking-[0.25em] hover:border-[#e8d44d]/60 hover:text-[#e8d44d] disabled:opacity-30 transition-colors rounded"
+                className="w-full py-4 rounded-full border-2 border-[#e8d44d] bg-transparent text-[#e8d44d] text-[13px] font-black tracking-[0.25em] hover:bg-[#e8d44d]/10 disabled:opacity-30 transition-colors"
               >
                 SKIP ENTRY
               </button>
