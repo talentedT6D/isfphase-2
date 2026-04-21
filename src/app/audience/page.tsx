@@ -20,6 +20,7 @@ export default function AudiencePage() {
   const [submittedScores, setSubmittedScores] = useState<Record<string, number>>({});
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
   const [submitError, setSubmitError] = useState("");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -267,9 +268,9 @@ export default function AudiencePage() {
 
           <div className="flex flex-col items-center gap-1">
             <button
-              onClick={handleLogout}
+              onClick={() => setSidebarOpen(true)}
               className="w-12 h-12 rounded-full bg-[#1a1a1a] border-2 border-[#e8d44d]/40 flex items-center justify-center text-base font-bold text-[#e8d44d] hover:bg-[#e8d44d]/10 transition-colors"
-              title="Logout"
+              title="Open menu"
             >
               {userName.charAt(0).toUpperCase()}
             </button>
@@ -517,6 +518,101 @@ export default function AudiencePage() {
           </a>
         </div>
       </div>
+
+      {/* Sidebar Drawer */}
+      {sidebarOpen && (
+        <>
+          <div
+            onClick={() => setSidebarOpen(false)}
+            className="absolute inset-0 bg-black/60 z-40 transition-opacity"
+          />
+          <aside className="absolute top-0 right-0 bottom-0 w-[340px] bg-[#1a1a1a] border-l-2 border-[#e8d44d]/30 z-50 flex flex-col shadow-2xl">
+            <div className="flex items-center justify-between px-6 py-5 border-b border-[#e8d44d]/15">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-[#e8d44d] flex items-center justify-center text-base font-bold text-[#1a1a1a]">
+                  {userName.charAt(0).toUpperCase()}
+                </div>
+                <div>
+                  <div className="text-[#e8d44d] text-sm font-bold uppercase tracking-wider">
+                    {userName}
+                  </div>
+                  <div className="text-[#e8d44d]/50 text-[10px] tracking-wider">
+                    {judgedCount}/{PLAYLIST.length} JUDGED
+                  </div>
+                </div>
+              </div>
+              <button
+                onClick={() => setSidebarOpen(false)}
+                className="text-[#e8d44d]/60 hover:text-[#e8d44d] transition-colors"
+                title="Close"
+              >
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M5 5l10 10M15 5L5 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                </svg>
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto">
+              <div className="px-6 pt-5 pb-2 text-[10px] tracking-[0.2em] text-[#e8d44d]/50 font-bold">
+                ENTRIES
+              </div>
+              <nav className="px-3">
+                {PLAYLIST.map((video, idx) => {
+                  const isCurrent = idx === videoIndex;
+                  const isJudged = submittedScores[video.id] !== undefined;
+                  return (
+                    <button
+                      key={video.id}
+                      onClick={() => {
+                        setVideoIndex(idx);
+                        setSidebarOpen(false);
+                      }}
+                      className={`w-full flex items-center justify-between gap-3 px-3 py-3 rounded text-left transition-colors ${
+                        isCurrent
+                          ? "bg-[#e8d44d]/20 text-[#e8d44d]"
+                          : "text-[#e8d44d]/80 hover:bg-[#e8d44d]/10"
+                      }`}
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        <span className="text-[11px] text-[#e8d44d]/50 font-bold tabular-nums w-6">
+                          {String(idx + 1).padStart(2, "0")}
+                        </span>
+                        <span className="text-sm font-bold truncate">
+                          {video.title}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2 shrink-0">
+                        {isJudged && (
+                          <span className="inline-flex items-center justify-center w-8 h-6 bg-[#e8d44d] text-[#1a1a1a] text-[10px] font-black">
+                            {submittedScores[video.id]}
+                          </span>
+                        )}
+                        {isCurrent && (
+                          <span className="text-[9px] tracking-wider font-bold text-[#e8d44d]/70">
+                            NOW
+                          </span>
+                        )}
+                      </div>
+                    </button>
+                  );
+                })}
+              </nav>
+            </div>
+
+            <div className="px-3 py-4 border-t border-[#e8d44d]/15">
+              <button
+                onClick={handleLogout}
+                className="w-full flex items-center gap-3 px-3 py-3 rounded text-[#e8d44d]/70 hover:text-[#e8d44d] hover:bg-[#e8d44d]/10 text-sm font-bold transition-colors"
+              >
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                  <path d="M7 2H4a2 2 0 00-2 2v10a2 2 0 002 2h3M13 13l4-4-4-4M7 9h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                LOG OUT
+              </button>
+            </div>
+          </aside>
+        </>
+      )}
     </div>
   );
 }
