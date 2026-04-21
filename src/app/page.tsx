@@ -53,31 +53,18 @@ export default function LoginPage() {
         }}
       />
 
-      {/* Header bar shape (PNG with transparency) */}
-      <img
-        src="/header-bar.png"
-        alt=""
-        className="absolute top-0 left-0 w-full pointer-events-none"
-        style={{
-          height: "30%",
-          objectFit: "fill",
-          filter: "sepia(1) saturate(3) brightness(0.12) hue-rotate(350deg)",
-        }}
-      />
-
       {/* Grain overlay */}
       <div className="absolute inset-0 grain-overlay opacity-10" />
 
       {/* Header */}
-      <img
-        src="/isf-logo-vertical.png"
-        alt="ISF Logo"
-        className="absolute z-20"
-        style={{ top: 24, left: 36, height: "128px", width: "auto" }}
-      />
-      <header className="relative z-10 flex items-start justify-end px-10 pt-10 shrink-0 h-[30vh] min-h-[220px]">
-        <div className="text-white/80 text-base font-bold italic tracking-wide pt-2">
-          JUDGE PORTAL &ndash; LOGIN
+      <header className="relative z-10 flex items-center justify-between px-10 pt-6 pb-3 shrink-0">
+        <img
+          src="/isf-horizontal-logo.png"
+          alt="Indian Scroll Festival"
+          style={{ height: "40px", width: "auto" }}
+        />
+        <div className="text-white/90 text-lg font-black tracking-[0.15em]">
+          JUDGE PORTAL
         </div>
       </header>
 
@@ -110,9 +97,9 @@ export default function LoginPage() {
                 <button
                   type="submit"
                   disabled={!name.trim()}
-                  className="relative w-full py-4 rounded-full bg-[#5a0e0e] text-white/90 text-sm font-black tracking-[0.25em]
+                  className="relative w-full py-4 rounded-full bg-[#1a1a1a] text-white text-sm font-black tracking-[0.25em]
                              shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_2px_6px_rgba(0,0,0,0.35)]
-                             hover:bg-[#6d1212] disabled:opacity-40 disabled:cursor-not-allowed transition-all overflow-hidden"
+                             hover:bg-[#2a2a2a] disabled:opacity-40 disabled:cursor-not-allowed transition-all overflow-hidden"
                 >
                   <span className="grain-overlay absolute inset-0 rounded-full opacity-40" />
                   <span className="relative">JOIN AS JUDGE</span>
@@ -144,9 +131,9 @@ export default function LoginPage() {
                 <button
                   type="submit"
                   disabled={!password}
-                  className="relative w-full py-4 rounded-full bg-[#5a0e0e] text-white/90 text-sm font-black tracking-[0.25em]
+                  className="relative w-full py-4 rounded-full bg-[#1a1a1a] text-white text-sm font-black tracking-[0.25em]
                              shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_2px_6px_rgba(0,0,0,0.35)]
-                             hover:bg-[#6d1212] disabled:opacity-40 disabled:cursor-not-allowed transition-all overflow-hidden"
+                             hover:bg-[#2a2a2a] disabled:opacity-40 disabled:cursor-not-allowed transition-all overflow-hidden"
                 >
                   <span className="grain-overlay absolute inset-0 rounded-full opacity-40" />
                   <span className="relative">ENTER AS ADMIN</span>
