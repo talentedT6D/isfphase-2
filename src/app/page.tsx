@@ -69,13 +69,13 @@ export default function LoginPage() {
       <div className="absolute inset-0 grain-overlay opacity-10" />
 
       {/* Header */}
-      <header className="relative z-10 flex items-center justify-between px-8 py-4">
+      <header className="relative z-10 flex items-start justify-between px-10 pt-6">
         <img
           src="/isf-logo-vertical.png"
           alt="ISF Logo"
-          className="h-16 w-auto"
+          className="h-24 w-auto"
         />
-        <div className="text-white/80 text-sm font-bold italic tracking-wide">
+        <div className="text-white/80 text-base font-bold italic tracking-wide pt-2">
           JUDGE PORTAL &ndash; LOGIN
         </div>
       </header>
@@ -169,14 +169,14 @@ export default function LoginPage() {
       </div>
 
       {/* Footer */}
-      <footer className="relative z-10 flex items-center justify-end px-8 py-5 gap-4">
+      <footer className="relative z-10 flex items-center justify-end px-10 py-6 gap-5">
         <a
           href="https://instagram.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-[#e8d44d]/40 hover:text-[#e8d44d]/70 transition-colors"
+          className="text-[#e8d44d]/80 hover:text-[#e8d44d] transition-colors"
         >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <rect x="2" y="2" width="20" height="20" rx="5" />
             <circle cx="12" cy="12" r="5" />
             <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
@@ -186,9 +186,9 @@ export default function LoginPage() {
           href="https://x.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-[#e8d44d]/40 hover:text-[#e8d44d]/70 transition-colors"
+          className="text-[#e8d44d]/80 hover:text-[#e8d44d] transition-colors"
         >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
             <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
           </svg>
         </a>
