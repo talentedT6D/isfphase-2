@@ -44,6 +44,32 @@ export default function AdminPage() {
     return map;
   }, [entries]);
 
+  // For each video: list of judges who scored it (with their scores + timestamps),
+  // sorted highest score first.
+  const videoVoters = useMemo(() => {
+    const map: Record<
+      string,
+      { userId: string; userName: string; score: number; createdAt: string | null }[]
+    > = {};
+    for (const judge of judges) {
+      for (const r of judge.ratings) {
+        if (!map[r.videoId]) map[r.videoId] = [];
+        map[r.videoId].push({
+          userId: judge.userId,
+          userName: judge.userName,
+          score: r.score,
+          createdAt: r.createdAt,
+        });
+      }
+    }
+    for (const k of Object.keys(map)) {
+      map[k].sort((a, b) => b.score - a.score);
+    }
+    return map;
+  }, [judges]);
+
+  const [expandedVideo, setExpandedVideo] = useState<string | null>(null);
+
   const allRows = useMemo(() => {
     return PLAYLIST.map((video, index) => {
       const entry = ratingsMap[video.id];
@@ -320,35 +346,94 @@ export default function AdminPage() {
             ) : (
               summaryPagination.pageRows.map((row) => {
                 const { date, time } = formatDateTime(row.lastJudgedAt);
+                const isExpanded = expandedVideo === row.videoId;
+                const voters = videoVoters[row.videoId] ?? [];
                 return (
-                  <div
-                    key={row.videoId}
-                    className="grid grid-cols-[60px_1fr_100px_180px_140px] px-5 py-4 border-b border-[#1a1a1a]/5 items-center hover:bg-[#1a1a1a]/5 transition-colors"
-                  >
-                    <span className="text-sm text-[#1a1a1a]/40">
-                      {String(row.index).padStart(2, "0")}
-                    </span>
-                    <div className="text-sm font-bold text-[#1a1a1a]">{row.title}</div>
-                    <div className="flex justify-center">
-                      {row.avgScore !== null ? (
-                        <span className="inline-flex items-center justify-center w-12 h-8 bg-[#1a1a1a] text-[#e8d44d] text-sm font-bold">
-                          {row.avgScore}
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center justify-center w-12 h-8 border border-dashed border-[#1a1a1a]/20 text-[#1a1a1a]/30 text-sm">
-                          &mdash;
-                        </span>
-                      )}
-                    </div>
-                    <div className="text-sm text-[#1a1a1a]/70">
-                      <div>{date}</div>
-                      {time && <div className="text-[#1a1a1a]/40 text-xs">{time}</div>}
-                    </div>
-                    <div className="text-right">
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#1a1a1a] text-[#e8d44d] text-[10px] tracking-[0.1em] font-bold">
-                        SUBMITTED
+                  <div key={row.videoId}>
+                    <div
+                      onClick={() =>
+                        setExpandedVideo(isExpanded ? null : row.videoId)
+                      }
+                      className={`grid grid-cols-[60px_1fr_100px_180px_140px] px-5 py-4 border-b border-[#1a1a1a]/5 items-center cursor-pointer transition-colors ${
+                        isExpanded
+                          ? "bg-[#1a1a1a]/10"
+                          : "hover:bg-[#1a1a1a]/5"
+                      }`}
+                    >
+                      <span className="text-sm text-[#1a1a1a]/40">
+                        {String(row.index).padStart(2, "0")}
                       </span>
+                      <div className="flex items-center gap-2">
+                        <div className="text-sm font-bold text-[#1a1a1a]">{row.title}</div>
+                        <span className="text-[10px] text-[#1a1a1a]/50 font-bold">
+                          ({row.totalVotes} {row.totalVotes === 1 ? "vote" : "votes"})
+                        </span>
+                        <svg
+                          width="12"
+                          height="12"
+                          viewBox="0 0 12 12"
+                          className={`text-[#1a1a1a]/50 transition-transform ${isExpanded ? "rotate-180" : ""}`}
+                        >
+                          <path d="M3 4.5l3 3 3-3" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" />
+                        </svg>
+                      </div>
+                      <div className="flex justify-center">
+                        {row.avgScore !== null ? (
+                          <span className="inline-flex items-center justify-center w-12 h-8 bg-[#1a1a1a] text-[#e8d44d] text-sm font-bold">
+                            {row.avgScore}
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center justify-center w-12 h-8 border border-dashed border-[#1a1a1a]/20 text-[#1a1a1a]/30 text-sm">
+                            &mdash;
+                          </span>
+                        )}
+                      </div>
+                      <div className="text-sm text-[#1a1a1a]/70">
+                        <div>{date}</div>
+                        {time && <div className="text-[#1a1a1a]/40 text-xs">{time}</div>}
+                      </div>
+                      <div className="text-right">
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#1a1a1a] text-[#e8d44d] text-[10px] tracking-[0.1em] font-bold">
+                          SUBMITTED
+                        </span>
+                      </div>
                     </div>
+                    {isExpanded && (
+                      <div className="bg-[#1a1a1a]/5 border-b border-[#1a1a1a]/5 px-5 py-4">
+                        <div className="ml-[60px]">
+                          <div className="text-[10px] tracking-[0.15em] text-[#1a1a1a]/60 mb-3 font-bold">
+                            {voters.length} {voters.length === 1 ? "JUDGE" : "JUDGES"} SCORED {row.title.toUpperCase()}
+                          </div>
+                          {voters.length === 0 ? (
+                            <div className="text-xs text-[#1a1a1a]/50">No votes yet.</div>
+                          ) : (
+                            <div className="grid grid-cols-[1fr_80px_160px] gap-y-2 text-sm">
+                              <div className="text-[10px] tracking-[0.1em] text-[#1a1a1a]/50 pb-1 border-b border-[#1a1a1a]/10 font-bold">JUDGE</div>
+                              <div className="text-[10px] tracking-[0.1em] text-[#1a1a1a]/50 pb-1 border-b border-[#1a1a1a]/10 text-center font-bold">SCORE</div>
+                              <div className="text-[10px] tracking-[0.1em] text-[#1a1a1a]/50 pb-1 border-b border-[#1a1a1a]/10 font-bold">SUBMITTED AT</div>
+                              {voters.map((v) => {
+                                const rd = formatDateTime(v.createdAt);
+                                return (
+                                  <div key={v.userId} className="contents">
+                                    <div className="py-1.5 font-bold text-[#1a1a1a]">
+                                      {v.userName}
+                                    </div>
+                                    <div className="py-1.5 text-center">
+                                      <span className="inline-flex items-center justify-center w-10 h-7 bg-[#1a1a1a] text-[#e8d44d] text-xs font-bold">
+                                        {v.score}
+                                      </span>
+                                    </div>
+                                    <div className="py-1.5 text-[#1a1a1a]/50 text-xs">
+                                      {rd.date} {rd.time}
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 );
               })
