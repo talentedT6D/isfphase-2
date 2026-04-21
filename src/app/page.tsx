@@ -102,15 +102,15 @@ export default function LoginPage() {
                   onChange={(e) => setName(e.target.value)}
                   placeholder="ENTER YOUR NAME"
                   autoFocus
-                  className="w-full px-6 py-4 bg-transparent border-2 border-[#e8d44d]/40 rounded-none
-                             text-[#e8d44d] placeholder-[#e8d44d]/30 text-center text-sm font-bold
+                  className="w-full px-6 py-4 bg-transparent border-2 border-[#e8d44d]/60 rounded-full
+                             text-[#e8d44d] placeholder-[#e8d44d]/70 text-center text-sm font-bold
                              tracking-[0.2em] focus:outline-none focus:border-[#e8d44d] transition-colors"
                 />
                 <button
                   type="submit"
                   disabled={!name.trim()}
-                  className="w-full py-4 bg-[#e8d44d] text-[#1a0000] text-sm font-black tracking-[0.25em]
-                             hover:bg-[#f0dc5a] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                  className="w-full py-4 rounded-full bg-[#3a0000]/70 text-white/80 text-sm font-black tracking-[0.25em]
+                             hover:bg-[#3a0000]/90 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
                 >
                   JOIN AS JUDGE
                 </button>
@@ -118,7 +118,7 @@ export default function LoginPage() {
             ) : (
               <form onSubmit={handlePasswordSubmit} className="space-y-4">
                 <div className="mb-2">
-                  <span className="inline-flex items-center border border-[#e8d44d]/40 text-[#e8d44d] px-5 py-1.5 text-[10px] font-bold tracking-[0.2em]">
+                  <span className="inline-flex items-center border border-[#e8d44d]/40 text-[#e8d44d] px-5 py-1.5 text-[10px] font-bold tracking-[0.2em] rounded-full">
                     ADMIN ACCESS
                   </span>
                 </div>
@@ -131,8 +131,8 @@ export default function LoginPage() {
                   }}
                   placeholder="ENTER PASSWORD"
                   autoFocus
-                  className="w-full px-6 py-4 bg-transparent border-2 border-[#e8d44d]/40 rounded-none
-                             text-[#e8d44d] placeholder-[#e8d44d]/30 text-center text-sm font-bold
+                  className="w-full px-6 py-4 bg-transparent border-2 border-[#e8d44d]/60 rounded-full
+                             text-[#e8d44d] placeholder-[#e8d44d]/70 text-center text-sm font-bold
                              tracking-[0.2em] focus:outline-none focus:border-[#e8d44d] transition-colors"
                 />
                 {error && (
@@ -141,8 +141,8 @@ export default function LoginPage() {
                 <button
                   type="submit"
                   disabled={!password}
-                  className="w-full py-4 bg-[#e8d44d] text-[#1a0000] text-sm font-black tracking-[0.25em]
-                             hover:bg-[#f0dc5a] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                  className="w-full py-4 rounded-full bg-[#3a0000]/70 text-white/80 text-sm font-black tracking-[0.25em]
+                             hover:bg-[#3a0000]/90 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
                 >
                   ENTER AS ADMIN
                 </button>
