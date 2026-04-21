@@ -72,8 +72,8 @@ export default function LoginPage() {
       <img
         src="/isf-logo-vertical.png"
         alt="ISF Logo"
-        className="absolute z-20 h-44 w-auto"
-        style={{ top: 42, left: 36 }}
+        className="absolute z-20 h-32 w-auto"
+        style={{ top: 24, left: 36 }}
       />
       <header className="relative z-10 flex items-start justify-end px-10 pt-8">
         <div className="text-white/80 text-base font-bold italic tracking-wide">

@@ -186,8 +186,8 @@ export default function AudiencePage() {
         <img
           src="/isf-logo-vertical.png"
           alt="ISF Logo"
-          className="absolute z-20 h-44 w-auto"
-          style={{ top: 42, left: 36 }}
+          className="absolute z-20 h-32 w-auto"
+          style={{ top: 24, left: 36 }}
         />
         <header className="relative z-10 flex items-center justify-end px-10 pt-8">
           <div className="text-[#e8d44d]/80 text-base font-bold italic tracking-wide">
@@ -271,7 +271,7 @@ export default function AudiencePage() {
         className="absolute z-20 h-44 w-auto"
         style={{ top: 42, left: 36 }}
       />
-      <header className="relative z-10 flex items-center justify-between px-10 pt-8 shrink-0">
+      <header className="relative z-10 flex items-center justify-between px-10 pt-8 shrink-0 min-h-[180px]">
         <div aria-hidden className="h-16 w-44" />
 
         <div className="text-[#e8d44d]/70 text-xs font-bold tracking-[0.15em]">
@@ -341,14 +341,14 @@ export default function AudiencePage() {
         </div>
 
         {/* Right - Judging Panel */}
-        <div className="flex-1 flex flex-col justify-center py-4" style={{ maxWidth: "550px" }}>
-          <div className="space-y-5">
+        <div className="flex-1 flex flex-col justify-center py-4" style={{ maxWidth: "520px" }}>
+          <div className="space-y-4">
             {/* Entry Info */}
             <div>
-              <h2 className="text-white text-5xl font-black italic tracking-wider leading-tight uppercase">
+              <h2 className="text-white text-4xl font-black italic tracking-wider leading-tight uppercase">
                 {currentVideo?.title || "Untitled"}
               </h2>
-              <div className="flex items-center gap-3 mt-2 text-white/70 text-sm font-bold tracking-widest">
+              <div className="flex items-center gap-3 mt-1 text-white/70 text-xs font-bold tracking-widest">
                 <span>@CREATOR</span>
                 <span>&bull;</span>
                 <span>{duration > 0 ? formatTime(duration) : "--:--"}</span>
@@ -376,12 +376,12 @@ export default function AudiencePage() {
             </div>
 
             {/* Score Section */}
-            <div className="pt-4">
-              <div className="flex items-baseline mb-6">
-                <span className="text-[#e8d44d] text-7xl font-black italic tabular-nums leading-none">
+            <div className="pt-2">
+              <div className="flex items-baseline mb-4">
+                <span className="text-[#e8d44d] text-6xl font-black italic tabular-nums leading-none">
                   {score}
                 </span>
-                <span className="text-[#e8d44d] text-5xl font-black italic leading-none">
+                <span className="text-[#e8d44d] text-4xl font-black italic leading-none">
                   /100
                 </span>
               </div>
@@ -415,11 +415,11 @@ export default function AudiencePage() {
             </div>
 
             {/* Action Buttons */}
-            <div className="space-y-3 pt-2">
+            <div className="space-y-2 pt-1">
               <button
                 onClick={submitScore}
                 disabled={submitStatus === "success"}
-                className={`w-full py-4 rounded-full text-[13px] font-black tracking-[0.25em] transition-colors ${
+                className={`w-full py-3 rounded-full text-[12px] font-black tracking-[0.25em] transition-colors ${
                   submitStatus === "success"
                     ? "bg-green-700 text-white"
                     : submitStatus === "error"
@@ -441,7 +441,7 @@ export default function AudiencePage() {
               <button
                 onClick={skipEntry}
                 disabled={videoIndex >= PLAYLIST.length - 1}
-                className="w-full py-4 rounded-full border-2 border-[#e8d44d] bg-transparent text-[#e8d44d] text-[13px] font-black tracking-[0.25em] hover:bg-[#e8d44d]/10 disabled:opacity-30 transition-colors"
+                className="w-full py-3 rounded-full border-2 border-[#e8d44d] bg-transparent text-[#e8d44d] text-[12px] font-black tracking-[0.25em] hover:bg-[#e8d44d]/10 disabled:opacity-30 transition-colors"
               >
                 SKIP ENTRY
               </button>
@@ -449,7 +449,7 @@ export default function AudiencePage() {
           </div>
 
           {/* Bottom Stats */}
-          <div className="border-t border-[#e8d44d]/20 pt-5 mt-6">
+          <div className="border-t border-[#e8d44d]/20 pt-4 mt-4">
             <div className="flex justify-between text-center">
               <div>
                 <div className="text-[#e8d44d] text-4xl font-black tabular-nums">
