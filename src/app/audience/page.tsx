@@ -170,27 +170,19 @@ export default function AudiencePage() {
               "radial-gradient(ellipse 110% 90% at 50% 60%, #d41414 0%, #a80c0c 45%, #6a0606 80%, #3a0202 100%)",
           }}
         />
-        <img
-          src="/header-bar.png"
-          alt=""
-          className="absolute top-0 left-0 w-full pointer-events-none"
-          style={{
-            height: "30%",
-            objectFit: "fill",
-            filter: "sepia(1) saturate(3) brightness(0.12) hue-rotate(350deg)",
-          }}
-        />
         <div className="absolute inset-0 grain-overlay opacity-10" />
 
         {/* Header */}
-        <img
-          src="/isf-logo-vertical.png"
-          alt="ISF Logo"
-          className="absolute z-20"
-          style={{ top: 24, left: 36, height: "128px", width: "auto" }}
-        />
-        <header className="relative z-10 flex items-start justify-end px-10 pt-10 shrink-0 h-[30vh] min-h-[220px]">
-          <div className="text-[#e8d44d]/80 text-base font-bold italic tracking-wide pt-2">
+        <header className="relative z-10 flex items-center justify-between px-10 pt-6 pb-3 shrink-0">
+          <img
+            src="/isf-horizontal-logo.png"
+            alt="Indian Scroll Festival"
+            style={{ height: "40px", width: "auto" }}
+          />
+          <div
+            className="text-white text-2xl font-bold tracking-[0.2em]"
+            style={{ fontFamily: '"obviously-narrow", "obviously", sans-serif' }}
+          >
             JUDGE PORTAL
           </div>
         </header>
@@ -250,45 +242,41 @@ export default function AudiencePage() {
         }}
       />
 
-      {/* Header bar shape (transparent PNG, tinted dark red) */}
-      <img
-        src="/header-bar.png"
-        alt=""
-        className="absolute top-0 left-0 w-full pointer-events-none"
-        style={{
-          height: "30%",
-          objectFit: "fill",
-          filter: "sepia(1) saturate(3) brightness(0.12) hue-rotate(350deg)",
-        }}
-      />
-
       <div className="absolute inset-0 grain-overlay opacity-10" />
 
       {/* Header */}
-      <img
-        src="/isf-logo-vertical.png"
-        alt="ISF Logo"
-        className="absolute z-20"
-        style={{ top: 24, left: 36, height: "128px", width: "auto" }}
-      />
-      <header className="relative z-10 flex items-start justify-between px-10 pt-10 shrink-0 h-[30vh] min-h-[220px]">
-        <div aria-hidden className="h-16 w-44" />
+      <header className="relative z-10 flex items-center justify-between px-10 pt-6 pb-3 shrink-0">
+        <img
+          src="/isf-horizontal-logo.png"
+          alt="Indian Scroll Festival"
+          style={{ height: "40px", width: "auto" }}
+        />
 
-        <div className="text-[#e8d44d]/80 text-xs font-bold tracking-[0.2em] pt-2">
-          NOW JUDGING &mdash; ENTRY #{String(videoIndex + 1).padStart(2, "0")}
-        </div>
+        <div className="flex items-center gap-6">
+          <div className="text-right">
+            <div
+              className="text-white text-2xl font-bold tracking-[0.2em]"
+              style={{ fontFamily: '"obviously-narrow", "obviously", sans-serif' }}
+            >
+              JUDGE PORTAL
+            </div>
+            <div className="text-[#e8d44d]/80 text-[10px] font-bold tracking-[0.2em] mt-1">
+              NOW JUDGING &mdash; ENTRY #{String(videoIndex + 1).padStart(2, "0")}
+            </div>
+          </div>
 
-        <div className="flex flex-col items-center gap-1">
-          <button
-            onClick={handleLogout}
-            className="w-14 h-14 rounded-full bg-[#1a1a1a] border-2 border-[#e8d44d]/30 flex items-center justify-center text-lg font-bold text-[#e8d44d] hover:bg-[#e8d44d]/10 transition-colors"
-            title="Logout"
-          >
-            {userName.charAt(0).toUpperCase()}
-          </button>
-          <span className="text-[#e8d44d]/80 text-[11px] tracking-wider font-bold">
-            {userName}
-          </span>
+          <div className="flex flex-col items-center gap-1">
+            <button
+              onClick={handleLogout}
+              className="w-12 h-12 rounded-full bg-[#1a1a1a] border-2 border-[#e8d44d]/40 flex items-center justify-center text-base font-bold text-[#e8d44d] hover:bg-[#e8d44d]/10 transition-colors"
+              title="Logout"
+            >
+              {userName.charAt(0).toUpperCase()}
+            </button>
+            <span className="text-[#e8d44d]/80 text-[10px] tracking-wider font-bold uppercase">
+              {userName}
+            </span>
+          </div>
         </div>
       </header>
 

@@ -63,7 +63,7 @@ export default function LoginPage() {
           alt="Indian Scroll Festival"
           style={{ height: "40px", width: "auto" }}
         />
-        <div className="text-white/90 text-lg font-black tracking-[0.15em]">
+        <div className="text-white text-2xl font-bold tracking-[0.2em]" style={{ fontFamily: '"obviously-narrow", "obviously", sans-serif' }}>
           JUDGE PORTAL
         </div>
       </header>
