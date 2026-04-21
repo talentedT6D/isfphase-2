@@ -3,6 +3,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { PLAYLIST } from "@/lib/videos";
+import { isSupabaseConfigured } from "@/lib/supabase";
 import {
   useAllVideoRatings,
   useJudgesData,
@@ -810,6 +811,13 @@ export default function AdminPage() {
 
         {/* Main Content */}
         <main className="flex-1 overflow-y-auto px-8 py-6">
+          {!isSupabaseConfigured && (
+            <div className="mb-6 border border-red-500/40 bg-red-500/10 text-red-900 px-4 py-3 text-sm font-bold tracking-wide">
+              Supabase is not configured. Set NEXT_PUBLIC_SUPABASE_URL and
+              NEXT_PUBLIC_SUPABASE_ANON_KEY in .env.local, then restart the dev
+              server. Submissions cannot be saved or read without these.
+            </div>
+          )}
           {renderActiveView()}
         </main>
       </div>

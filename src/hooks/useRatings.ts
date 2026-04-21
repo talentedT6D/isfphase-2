@@ -47,11 +47,15 @@ export function useAdminRatings(videoId: string) {
       return;
     }
 
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("ratings")
       .select("rating")
       .eq("video_id", videoId)
       .eq("session_id", SESSION_ID);
+
+    if (error) {
+      console.error("useAdminRatings: failed to fetch ratings", error.message);
+    }
 
     if (data && data.length > 0) {
       const sum = data.reduce((acc, r) => acc + r.rating, 0);
@@ -116,11 +120,46 @@ export function useAllVideoRatings() {
       return;
     }
 
-    const { data } = await supabase
+    // Diagnostic: probe the ratings table without the session filter so we can
+    // see exactly what the client sees and what session_id values exist.
+    const probe = await supabase
+      .from("ratings")
+      .select("session_id, video_id, rating, created_at");
+    if (probe.error) {
+      console.error(
+        "[ratings-diagnostic] unfiltered probe failed",
+        probe.error.message
+      );
+    } else {
+      const rows = probe.data ?? [];
+      const bySession: Record<string, number> = {};
+      for (const r of rows) {
+        const s = String(r.session_id);
+        bySession[s] = (bySession[s] ?? 0) + 1;
+      }
+      console.log(
+        `[ratings-diagnostic] expected session_id="${SESSION_ID}" — total rows visible to client: ${rows.length}`,
+        { countsBySession: bySession, sampleRow: rows[0] ?? null }
+      );
+      if (rows.length > 0 && (bySession[SESSION_ID] ?? 0) === 0) {
+        console.warn(
+          `[ratings-diagnostic] Ratings exist, but NONE match session_id="${SESSION_ID}". Leaderboard filters them out. Actual session_ids in table: ${Object.keys(bySession).join(", ")}`
+        );
+      }
+    }
+
+    const { data, error } = await supabase
       .from("ratings")
       .select("video_id, rating, created_at")
       .eq("session_id", SESSION_ID)
       .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error(
+        "useAllVideoRatings: failed to fetch ratings",
+        error.message
+      );
+    }
 
     if (data && data.length > 0) {
       const grouped: Record<
@@ -208,11 +247,15 @@ export function useJudgesData() {
       return;
     }
 
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("ratings")
       .select("user_id, user_name, video_id, rating, created_at")
       .eq("session_id", SESSION_ID)
       .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("useJudgesData: failed to fetch ratings", error.message);
+    }
 
     if (data && data.length > 0) {
       const grouped: Record<

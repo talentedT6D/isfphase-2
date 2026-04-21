@@ -87,21 +87,36 @@ export default function AudiencePage() {
     setSubmitStatus("idle");
     setSubmitError("");
 
-    if (isSupabaseConfigured && userId) {
-      const { error } = await supabase.from("ratings").upsert({
-        video_id: currentVideo.id,
-        user_id: userId,
-        user_name: userName,
-        session_id: SESSION_ID,
-        rating: score,
-        created_at: new Date().toISOString(),
-      });
-      if (error) {
-        console.error("Failed to submit rating:", error.message);
-        setSubmitStatus("error");
-        setSubmitError(error.message);
-        return;
-      }
+    if (!isSupabaseConfigured) {
+      console.error(
+        "Supabase is not configured — set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY"
+      );
+      setSubmitStatus("error");
+      setSubmitError(
+        "Backend not configured. Your score was not saved. Please contact the organizer."
+      );
+      return;
+    }
+
+    if (!userId) {
+      setSubmitStatus("error");
+      setSubmitError("Missing user id. Please log in again.");
+      return;
+    }
+
+    const { error } = await supabase.from("ratings").upsert({
+      video_id: currentVideo.id,
+      user_id: userId,
+      user_name: userName,
+      session_id: SESSION_ID,
+      rating: score,
+      created_at: new Date().toISOString(),
+    });
+    if (error) {
+      console.error("Failed to submit rating:", error.message);
+      setSubmitStatus("error");
+      setSubmitError(error.message);
+      return;
     }
 
     setSubmittedScores((prev) => ({ ...prev, [currentVideo.id]: score }));
