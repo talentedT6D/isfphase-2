@@ -189,7 +189,7 @@ export default function AudiencePage() {
           className="absolute z-20 h-32 w-auto"
           style={{ top: 24, left: 36 }}
         />
-        <header className="relative z-10 flex items-center justify-end px-10 pt-8">
+        <header className="relative z-10 flex items-center justify-end px-10 pt-8 shrink-0 h-[30vh] min-h-[220px]">
           <div className="text-[#e8d44d]/80 text-base font-bold italic tracking-wide">
             JUDGE PORTAL
           </div>
@@ -271,7 +271,7 @@ export default function AudiencePage() {
         className="absolute z-20 h-44 w-auto"
         style={{ top: 42, left: 36 }}
       />
-      <header className="relative z-10 flex items-center justify-between px-10 pt-8 shrink-0 min-h-[180px]">
+      <header className="relative z-10 flex items-center justify-between px-10 pt-8 shrink-0 h-[30vh] min-h-[220px]">
         <div aria-hidden className="h-16 w-44" />
 
         <div className="text-[#e8d44d]/70 text-xs font-bold tracking-[0.15em]">
