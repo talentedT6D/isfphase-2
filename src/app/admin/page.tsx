@@ -21,6 +21,7 @@ export default function AdminPage() {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [expandedJudge, setExpandedJudge] = useState<string | null>(null);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   useEffect(() => {
     const role = localStorage.getItem("user-role");
@@ -250,7 +251,7 @@ export default function AdminPage() {
       <>
         <div className="flex items-start justify-between mb-6">
           <div>
-            <h1 className="text-5xl font-black tracking-wider text-white">
+            <h1 className="text-3xl sm:text-5xl font-black tracking-wider text-white">
               JUDGING SUMMARY
             </h1>
             <p className="text-sm text-white/70 tracking-[0.15em] mt-1 font-bold">
@@ -266,12 +267,12 @@ export default function AdminPage() {
         </div>
 
         {/* Stat Cards */}
-        <div className="grid grid-cols-3 gap-8 mb-8">
+        <div className="grid grid-cols-3 gap-3 sm:gap-8 mb-6 sm:mb-8">
           <div>
             <div className="text-[10px] tracking-[0.2em] text-[#e8d44d]/80 mb-2 font-bold">
               TOTAL REELS JUDGED
             </div>
-            <div className="text-6xl font-black text-[#e8d44d] tabular-nums">
+            <div className="text-4xl sm:text-6xl font-black text-[#e8d44d] tabular-nums">
               {String(totalJudged).padStart(2, "0")}
             </div>
             <div className="text-xs text-[#e8d44d]/60 mt-1 tracking-wider font-bold">
@@ -282,7 +283,7 @@ export default function AdminPage() {
             <div className="text-[10px] tracking-[0.2em] text-[#e8d44d]/80 mb-2 font-bold">
               AVERAGE SCORE GIVEN
             </div>
-            <div className="text-6xl font-black text-[#e8d44d] tabular-nums">
+            <div className="text-4xl sm:text-6xl font-black text-[#e8d44d] tabular-nums">
               {String(overallAvg).padStart(2, "0")}
             </div>
             <div className="text-xs text-[#e8d44d]/60 mt-1 tracking-wider font-bold">
@@ -293,7 +294,7 @@ export default function AdminPage() {
             <div className="text-[10px] tracking-[0.2em] text-[#e8d44d]/80 mb-2 font-bold">
               REELS REMAINING
             </div>
-            <div className="text-6xl font-black text-[#e8d44d] tabular-nums">
+            <div className="text-4xl sm:text-6xl font-black text-[#e8d44d] tabular-nums">
               {String(remaining).padStart(2, "0")}
             </div>
             <div className="text-xs text-[#e8d44d]/60 mt-1 tracking-wider font-bold">
@@ -304,7 +305,7 @@ export default function AdminPage() {
 
         {/* Judged Entries - yellow panel */}
         <div
-          className="rounded-xl p-6"
+          className="rounded-xl p-4 sm:p-6 overflow-x-auto"
           style={{
             background:
               "linear-gradient(160deg, #f0dc5a 0%, #e8d44d 50%, #c7b33e 100%)",
@@ -327,7 +328,7 @@ export default function AdminPage() {
               className="w-full px-4 py-3 rounded-full border border-[#1a1a1a]/25 bg-white/40 text-sm text-[#1a1a1a] placeholder-[#1a1a1a]/40 focus:outline-none focus:border-[#1a1a1a]/60 transition-colors"
             />
           </div>
-          <div>
+          <div className="min-w-[680px]">
             <div className="grid grid-cols-[60px_1fr_100px_180px_140px] px-5 py-3 border-b border-[#1a1a1a]/10 text-[10px] tracking-[0.15em] text-[#1a1a1a]/50 font-bold bg-[#1a1a1a] text-[#e8d44d]">
               <span>#</span>
               <span>ENTRY</span>
@@ -453,7 +454,7 @@ export default function AdminPage() {
       <>
         <div className="flex items-start justify-between mb-6">
           <div>
-            <h1 className="text-5xl font-black tracking-wider text-white">
+            <h1 className="text-3xl sm:text-5xl font-black tracking-wider text-white">
               SUBMISSIONS
             </h1>
             <p className="text-sm text-white/70 tracking-[0.15em] mt-1 font-bold">
@@ -466,7 +467,7 @@ export default function AdminPage() {
         </div>
 
         <div
-          className="rounded-xl p-6"
+          className="rounded-xl p-4 sm:p-6 overflow-x-auto"
           style={{
             background:
               "linear-gradient(160deg, #f0dc5a 0%, #e8d44d 50%, #c7b33e 100%)",
@@ -482,7 +483,7 @@ export default function AdminPage() {
             />
           </div>
 
-          <div>
+          <div className="min-w-[680px]">
           <div className="grid grid-cols-[60px_1fr_100px_100px_140px] px-5 py-3 border-b border-[#1a1a1a]/10 text-[10px] tracking-[0.15em] font-bold bg-[#1a1a1a] text-[#e8d44d]">
             <span>#</span>
             <span>VIDEO TITLE</span>
@@ -553,7 +554,7 @@ export default function AdminPage() {
       <>
         <div className="flex items-start justify-between mb-6">
           <div>
-            <h1 className="text-5xl font-black tracking-wider text-white">
+            <h1 className="text-3xl sm:text-5xl font-black tracking-wider text-white">
               JUDGES
             </h1>
             <p className="text-sm text-white/70 tracking-[0.15em] mt-1 font-bold">
@@ -566,7 +567,7 @@ export default function AdminPage() {
         </div>
 
         <div
-          className="rounded-xl p-6"
+          className="rounded-xl p-4 sm:p-6 overflow-x-auto"
           style={{
             background:
               "linear-gradient(160deg, #f0dc5a 0%, #e8d44d 50%, #c7b33e 100%)",
@@ -582,7 +583,7 @@ export default function AdminPage() {
             />
           </div>
 
-          <div>
+          <div className="min-w-[680px]">
           <div className="grid grid-cols-[60px_1fr_120px_100px_180px] px-5 py-3 border-b border-[#1a1a1a]/10 text-[10px] tracking-[0.15em] font-bold bg-[#1a1a1a] text-[#e8d44d]">
             <span>#</span>
             <span>JUDGE</span>
@@ -720,7 +721,7 @@ export default function AdminPage() {
       <>
         <div className="flex items-start justify-between mb-6">
           <div>
-            <h1 className="text-5xl font-black tracking-wider text-white">
+            <h1 className="text-3xl sm:text-5xl font-black tracking-wider text-white">
               LEADERBOARD
             </h1>
             <p className="text-sm text-white/70 tracking-[0.15em] mt-1 font-bold">
@@ -733,7 +734,7 @@ export default function AdminPage() {
         </div>
 
         <div
-          className="rounded-xl p-6"
+          className="rounded-xl p-4 sm:p-6 overflow-x-auto"
           style={{
             background:
               "linear-gradient(160deg, #f0dc5a 0%, #e8d44d 50%, #c7b33e 100%)",
@@ -749,7 +750,7 @@ export default function AdminPage() {
             />
           </div>
 
-          <div>
+          <div className="min-w-[680px]">
           <div className="grid grid-cols-[60px_1fr_120px_100px_180px] px-5 py-3 border-b border-[#1a1a1a]/10 text-[10px] tracking-[0.15em] font-bold bg-[#1a1a1a] text-[#e8d44d]">
             <span>RANK</span>
             <span>VIDEO</span>
@@ -855,21 +856,32 @@ export default function AdminPage() {
       <div className="absolute inset-0 grain-overlay opacity-10 pointer-events-none" />
 
       {/* Header */}
-      <header className="relative shrink-0 z-10 px-10 pt-6 pb-3 flex items-start justify-between">
-        <img
-          src="/isf-horizontal-logo.png"
-          alt="Indian Scroll Festival"
-          style={{ height: "56px", width: "auto" }}
-        />
+      <header className="relative shrink-0 z-10 px-4 sm:px-10 pt-4 sm:pt-6 pb-3 flex items-start justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setMobileNavOpen(true)}
+            className="md:hidden w-10 h-10 flex items-center justify-center text-[#e8d44d] border border-[#e8d44d]/40 rounded"
+            aria-label="Open menu"
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+          </button>
+          <img
+            src="/isf-horizontal-logo.png"
+            alt="Indian Scroll Festival"
+            className="h-8 sm:h-14 w-auto"
+          />
+        </div>
         <div className="text-right">
-          <div className="text-white/85 text-base font-bold italic tracking-wide">
+          <div className="text-white/85 text-sm sm:text-base font-bold italic tracking-wide">
             ADMIN PANEL
           </div>
-          <div className="flex items-center gap-2 mt-2 justify-end">
-            <div className="w-9 h-9 rounded-full bg-[#1a1a1a] border-2 border-[#e8d44d]/40 flex items-center justify-center text-sm font-bold text-[#e8d44d]">
+          <div className="flex items-center gap-2 mt-1 sm:mt-2 justify-end">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#1a1a1a] border-2 border-[#e8d44d]/40 flex items-center justify-center text-sm font-bold text-[#e8d44d]">
               {adminName.charAt(0).toUpperCase()}
             </div>
-            <span className="text-[#e8d44d]/80 text-xs font-bold tracking-wider">
+            <span className="hidden sm:inline text-[#e8d44d]/80 text-xs font-bold tracking-wider">
               {adminName}
             </span>
           </div>
@@ -878,8 +890,19 @@ export default function AdminPage() {
 
       {/* Content Area */}
       <div className="relative flex-1 flex min-h-0 z-10">
+        {/* Mobile nav backdrop */}
+        {mobileNavOpen && (
+          <div
+            onClick={() => setMobileNavOpen(false)}
+            className="md:hidden absolute inset-0 bg-black/60 z-30"
+          />
+        )}
         {/* Sidebar */}
-        <aside className="w-[220px] py-6 px-5 flex flex-col justify-between shrink-0">
+        <aside
+          className={`absolute md:relative top-0 bottom-0 left-0 w-[220px] bg-[#5a0404] md:bg-transparent py-6 px-5 flex flex-col justify-between shrink-0 z-40 transition-transform md:translate-x-0 ${
+            mobileNavOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+          }`}
+        >
           <div>
             {sidebarItems.map((group) => (
               <div key={group.section}>
@@ -890,7 +913,10 @@ export default function AdminPage() {
                   {group.items.map((item) => (
                     <button
                       key={item.key}
-                      onClick={() => setActiveView(item.key)}
+                      onClick={() => {
+                        setActiveView(item.key);
+                        setMobileNavOpen(false);
+                      }}
                       className={`w-full flex items-center gap-3 px-3 py-2 text-sm transition-colors text-left font-bold tracking-wide ${
                         activeView === item.key
                           ? "bg-black/40 text-[#e8d44d] rounded"

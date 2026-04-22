@@ -174,14 +174,14 @@ export default function AudiencePage() {
         <div className="absolute inset-0 grain-overlay opacity-10" />
 
         {/* Header */}
-        <header className="relative z-10 flex items-center justify-between px-10 pt-6 pb-3 shrink-0">
+        <header className="relative z-10 flex items-center justify-between px-4 sm:px-10 pt-4 sm:pt-6 pb-2 sm:pb-3 shrink-0">
           <img
             src="/isf-horizontal-logo.png"
             alt="Indian Scroll Festival"
-            style={{ height: "40px", width: "auto" }}
+            className="h-7 sm:h-10 w-auto"
           />
           <div
-            className="text-white text-2xl font-bold tracking-[0.2em]"
+            className="text-white text-lg sm:text-2xl font-bold tracking-[0.2em]"
             style={{ fontFamily: '"obviously-narrow", "obviously", sans-serif' }}
           >
             JUDGE PORTAL
@@ -246,17 +246,17 @@ export default function AudiencePage() {
       <div className="absolute inset-0 grain-overlay opacity-10" />
 
       {/* Header */}
-      <header className="relative z-10 flex items-center justify-between px-10 pt-6 pb-3 shrink-0">
+      <header className="relative z-10 flex items-center justify-between px-4 sm:px-10 pt-4 sm:pt-6 pb-2 sm:pb-3 shrink-0">
         <img
           src="/isf-horizontal-logo.png"
           alt="Indian Scroll Festival"
-          style={{ height: "40px", width: "auto" }}
+          className="h-7 sm:h-10 w-auto"
         />
 
-        <div className="flex items-center gap-6">
-          <div className="text-right">
+        <div className="flex items-center gap-3 sm:gap-6">
+          <div className="text-right hidden sm:block">
             <div
-              className="text-white text-2xl font-bold tracking-[0.2em]"
+              className="text-white text-xl sm:text-2xl font-bold tracking-[0.2em]"
               style={{ fontFamily: '"obviously-narrow", "obviously", sans-serif' }}
             >
               JUDGE PORTAL
@@ -265,16 +265,21 @@ export default function AudiencePage() {
               NOW JUDGING &mdash; ENTRY #{String(videoIndex + 1).padStart(2, "0")}
             </div>
           </div>
+          <div className="text-right sm:hidden">
+            <div className="text-[#e8d44d]/90 text-[10px] font-bold tracking-[0.15em]">
+              ENTRY #{String(videoIndex + 1).padStart(2, "0")}
+            </div>
+          </div>
 
           <div className="flex flex-col items-center gap-1">
             <button
               onClick={() => setSidebarOpen(true)}
-              className="w-12 h-12 rounded-full bg-[#1a1a1a] border-2 border-[#e8d44d]/40 flex items-center justify-center text-base font-bold text-[#e8d44d] hover:bg-[#e8d44d]/10 transition-colors"
+              className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#1a1a1a] border-2 border-[#e8d44d]/40 flex items-center justify-center text-sm sm:text-base font-bold text-[#e8d44d] hover:bg-[#e8d44d]/10 transition-colors"
               title="Open menu"
             >
               {userName.charAt(0).toUpperCase()}
             </button>
-            <span className="text-[#e8d44d]/80 text-[10px] tracking-wider font-bold uppercase">
+            <span className="hidden sm:inline text-[#e8d44d]/80 text-[10px] tracking-wider font-bold uppercase">
               {userName}
             </span>
           </div>
@@ -282,10 +287,10 @@ export default function AudiencePage() {
       </header>
 
       {/* Main Layout */}
-      <main className="relative z-10 flex-1 flex min-h-0 px-6 pb-4">
+      <main className="relative z-10 flex-1 flex flex-col md:flex-row min-h-0 px-4 sm:px-6 pb-4 gap-4 md:gap-0 overflow-y-auto md:overflow-hidden">
         {/* Left - Video Player */}
-        <div className="flex items-center justify-center pr-8" style={{ width: "45%" }}>
-          <div className="relative h-full max-h-full aspect-[9/16] bg-black/40 border border-[#e8d44d]/20 rounded-lg overflow-hidden flex flex-col">
+        <div className="flex items-center justify-center md:pr-8 w-full md:w-[45%] shrink-0">
+          <div className="relative max-h-[48vh] md:max-h-full md:h-full aspect-[9/16] bg-black/40 border border-[#e8d44d]/20 rounded-lg overflow-hidden flex flex-col mx-auto">
             <div className="flex-1 relative min-h-0">
               <video
                 ref={videoRef}
@@ -330,11 +335,11 @@ export default function AudiencePage() {
         </div>
 
         {/* Right - Judging Panel */}
-        <div className="flex-1 flex flex-col justify-center py-4" style={{ maxWidth: "520px" }}>
-          <div className="space-y-4">
+        <div className="flex-1 flex flex-col justify-center py-2 md:py-4 w-full md:max-w-[520px]">
+          <div className="space-y-3 sm:space-y-4">
             {/* Entry Info */}
             <div>
-              <h2 className="text-white text-4xl font-black italic tracking-wider leading-tight uppercase">
+              <h2 className="text-white text-3xl sm:text-4xl font-black italic tracking-wider leading-tight uppercase">
                 {currentVideo?.title || "Untitled"}
               </h2>
               <div className="flex items-center gap-3 mt-1 text-white/70 text-xs font-bold tracking-widest">
@@ -366,11 +371,11 @@ export default function AudiencePage() {
 
             {/* Score Section */}
             <div className="pt-2">
-              <div className="flex items-baseline mb-4">
-                <span className="text-[#e8d44d] text-6xl font-black italic tabular-nums leading-none">
+              <div className="flex items-baseline mb-3 sm:mb-4">
+                <span className="text-[#e8d44d] text-5xl sm:text-6xl font-black italic tabular-nums leading-none">
                   {score}
                 </span>
-                <span className="text-[#e8d44d] text-4xl font-black italic leading-none">
+                <span className="text-[#e8d44d] text-3xl sm:text-4xl font-black italic leading-none">
                   /100
                 </span>
               </div>
@@ -470,7 +475,7 @@ export default function AudiencePage() {
       </main>
 
       {/* Bottom Navigation */}
-      <div className="relative z-10 flex items-center justify-between px-6 pb-4 shrink-0">
+      <div className="relative z-10 flex items-center justify-between px-4 sm:px-6 pb-3 sm:pb-4 shrink-0">
         <div className="flex items-center gap-2">
           <button
             onClick={() => goToVideo(videoIndex - 1)}
@@ -526,7 +531,7 @@ export default function AudiencePage() {
             onClick={() => setSidebarOpen(false)}
             className="absolute inset-0 bg-black/60 z-40 transition-opacity"
           />
-          <aside className="absolute top-0 right-0 bottom-0 w-[340px] bg-[#1a1a1a] border-l-2 border-[#e8d44d]/30 z-50 flex flex-col shadow-2xl">
+          <aside className="absolute top-0 right-0 bottom-0 w-full max-w-[340px] sm:w-[340px] bg-[#1a1a1a] border-l-2 border-[#e8d44d]/30 z-50 flex flex-col shadow-2xl">
             <div className="flex items-center justify-between px-6 py-5 border-b border-[#e8d44d]/15">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-[#e8d44d] flex items-center justify-center text-base font-bold text-[#1a1a1a]">

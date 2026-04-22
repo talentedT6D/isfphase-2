@@ -69,14 +69,14 @@ export default function LoginPage() {
       <div className="absolute inset-0 grain-overlay opacity-10" />
 
       {/* Header */}
-      <header className="relative z-10 flex items-center justify-between px-10 pt-6 pb-3 shrink-0">
+      <header className="relative z-10 flex items-center justify-between px-4 sm:px-10 pt-4 sm:pt-6 pb-2 sm:pb-3 shrink-0">
         <img
           src="/isf-horizontal-logo.png"
           alt="Indian Scroll Festival"
-          style={{ height: "40px", width: "auto" }}
+          className="h-7 sm:h-10 w-auto"
         />
         <div
-          className="text-white text-2xl font-bold tracking-[0.2em]"
+          className="text-white text-lg sm:text-2xl font-bold tracking-[0.2em]"
           style={{ fontFamily: '"obviously-narrow", "obviously", sans-serif' }}
         >
           JUDGE PORTAL
@@ -213,7 +213,7 @@ export default function LoginPage() {
       </div>
 
       {/* Footer */}
-      <footer className="relative z-10 flex items-center justify-end px-10 py-6 gap-5">
+      <footer className="relative z-10 flex items-center justify-end px-5 sm:px-10 py-4 sm:py-6 gap-4 sm:gap-5">
         <a
           href="https://instagram.com"
           target="_blank"
