@@ -369,19 +369,21 @@ export default function AudiencePage() {
               </div>
             </div>
 
-            {/* Score Section */}
-            <div className="pt-2">
-              <div className="flex items-baseline mb-3 sm:mb-4">
-                <span className="text-[#e8d44d] text-5xl sm:text-6xl font-black italic tabular-nums leading-none">
+            {/* Score Section
+                On desktop: score stacked above slider (original layout).
+                On mobile: score and slider sit side by side via flex-row-reverse. */}
+            <div className="pt-2 flex flex-row-reverse items-center gap-4 md:block md:gap-0">
+              <div className="flex items-baseline shrink-0 md:mb-4">
+                <span className="text-[#e8d44d] text-4xl md:text-6xl font-black italic tabular-nums leading-none">
                   {score}
                 </span>
-                <span className="text-[#e8d44d] text-3xl sm:text-4xl font-black italic leading-none">
+                <span className="text-[#e8d44d] text-2xl md:text-4xl font-black italic leading-none">
                   /100
                 </span>
               </div>
 
               {/* Slider */}
-              <div>
+              <div className="flex-1 md:w-full">
                 <div className="flex justify-between text-[11px] text-white/80 mb-2 font-bold tracking-wider">
                   <span>1</span>
                   <span>25</span>
@@ -409,11 +411,11 @@ export default function AudiencePage() {
             </div>
 
             {/* Action Buttons */}
-            <div className="space-y-2 pt-1">
+            <div className="flex gap-2 md:block md:space-y-2 pt-1">
               <button
                 onClick={submitScore}
                 disabled={submitStatus === "success"}
-                className={`w-full py-3 rounded-full text-[12px] font-black tracking-[0.25em] transition-colors ${
+                className={`flex-1 md:w-full py-3 rounded-full text-[12px] font-black tracking-[0.25em] transition-colors ${
                   submitStatus === "success"
                     ? "bg-green-700 text-white"
                     : submitStatus === "error"
@@ -435,7 +437,7 @@ export default function AudiencePage() {
               <button
                 onClick={skipEntry}
                 disabled={videoIndex >= PLAYLIST.length - 1}
-                className="w-full py-3 rounded-full border-2 border-[#e8d44d] bg-transparent text-[#e8d44d] text-[12px] font-black tracking-[0.25em] hover:bg-[#e8d44d]/10 disabled:opacity-30 transition-colors"
+                className="flex-1 md:w-full py-3 rounded-full border-2 border-[#e8d44d] bg-transparent text-[#e8d44d] text-[12px] font-black tracking-[0.25em] hover:bg-[#e8d44d]/10 disabled:opacity-30 transition-colors"
               >
                 SKIP ENTRY
               </button>
