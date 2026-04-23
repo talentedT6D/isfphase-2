@@ -76,8 +76,11 @@ export default function LoginPage() {
           className="h-7 sm:h-10 w-auto"
         />
         <div
-          className="text-white text-lg sm:text-2xl font-bold tracking-[0.2em]"
-          style={{ fontFamily: '"obviously-narrow", "obviously", sans-serif' }}
+          className="text-white text-lg sm:text-2xl tracking-[0.2em]"
+          style={{
+            fontFamily: '"obviously-wide", "obviously", sans-serif',
+            fontWeight: 500,
+          }}
         >
           JUDGE PORTAL
         </div>
