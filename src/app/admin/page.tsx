@@ -251,10 +251,10 @@ export default function AdminPage() {
       <>
         <div className="flex items-start justify-between mb-6">
           <div>
-            <h1 className="text-3xl sm:text-5xl font-black tracking-wider text-white">
+            <h1 className="text-3xl sm:text-5xl font-wide fw-semibold tracking-wider text-white">
               JUDGING SUMMARY
             </h1>
-            <p className="text-sm text-white/70 tracking-[0.15em] mt-1 font-bold">
+            <p className="text-sm text-white/70 tracking-[0.15em] mt-1 font-wide fw-light">
               {adminName.toUpperCase()}
             </p>
           </div>
@@ -272,7 +272,7 @@ export default function AdminPage() {
             <div className="text-[10px] tracking-[0.2em] text-[#e8d44d]/80 mb-2 font-bold">
               TOTAL REELS JUDGED
             </div>
-            <div className="text-4xl sm:text-6xl font-black text-[#e8d44d] tabular-nums">
+            <div className="text-4xl sm:text-6xl font-wide fw-semibold text-[#e8d44d] tabular-nums">
               {String(totalJudged).padStart(2, "0")}
             </div>
             <div className="text-xs text-[#e8d44d]/60 mt-1 tracking-wider font-bold">
@@ -283,7 +283,7 @@ export default function AdminPage() {
             <div className="text-[10px] tracking-[0.2em] text-[#e8d44d]/80 mb-2 font-bold">
               AVERAGE SCORE GIVEN
             </div>
-            <div className="text-4xl sm:text-6xl font-black text-[#e8d44d] tabular-nums">
+            <div className="text-4xl sm:text-6xl font-wide fw-semibold text-[#e8d44d] tabular-nums">
               {String(overallAvg).padStart(2, "0")}
             </div>
             <div className="text-xs text-[#e8d44d]/60 mt-1 tracking-wider font-bold">
@@ -294,7 +294,7 @@ export default function AdminPage() {
             <div className="text-[10px] tracking-[0.2em] text-[#e8d44d]/80 mb-2 font-bold">
               REELS REMAINING
             </div>
-            <div className="text-4xl sm:text-6xl font-black text-[#e8d44d] tabular-nums">
+            <div className="text-4xl sm:text-6xl font-wide fw-semibold text-[#e8d44d] tabular-nums">
               {String(remaining).padStart(2, "0")}
             </div>
             <div className="text-xs text-[#e8d44d]/60 mt-1 tracking-wider font-bold">
@@ -312,7 +312,7 @@ export default function AdminPage() {
           }}
         >
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-black tracking-[0.1em] text-[#1a1a1a]">
+            <h2 className="text-xl font-wide fw-semibold tracking-[0.1em] text-[#1a1a1a]">
               JUDGED ENTRIES
             </h2>
             <span className="text-sm text-[#1a1a1a]/60 font-bold">
@@ -325,11 +325,11 @@ export default function AdminPage() {
               placeholder="Search by title or handle..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full px-4 py-3 rounded-full border border-[#1a1a1a]/25 bg-white/40 text-sm text-[#1a1a1a] placeholder-[#1a1a1a]/40 focus:outline-none focus:border-[#1a1a1a]/60 transition-colors"
+              className="w-full px-4 py-3 rounded-full border border-[#1a1a1a]/25 bg-white/40 text-sm text-[#1a1a1a] placeholder-[#1a1a1a]/40 focus:outline-none focus:border-[#1a1a1a]/60 transition-colors font-narrow fw-medium"
             />
           </div>
           <div className="min-w-[680px]">
-            <div className="grid grid-cols-[60px_1fr_100px_180px_140px] px-5 py-3 border-b border-[#1a1a1a]/10 text-[10px] tracking-[0.15em] text-[#1a1a1a]/50 font-bold bg-[#1a1a1a] text-[#e8d44d]">
+            <div className="grid grid-cols-[60px_1fr_100px_180px_140px] px-5 py-3 border-b border-[#1a1a1a]/10 text-[10px] tracking-[0.15em] text-[#1a1a1a]/50 font-regular-w fw-semibold bg-[#1a1a1a] text-[#e8d44d]">
               <span>#</span>
               <span>ENTRY</span>
               <span className="text-center">SCORE</span>
@@ -365,7 +365,7 @@ export default function AdminPage() {
                         {String(row.index).padStart(2, "0")}
                       </span>
                       <div className="flex items-center gap-2">
-                        <div className="text-sm font-bold text-[#1a1a1a]">{row.title}</div>
+                        <div className="text-sm font-regular-w fw-medium text-[#1a1a1a]">{row.title}</div>
                         <span className="text-[10px] text-[#1a1a1a]/50 font-bold">
                           ({row.totalVotes} {row.totalVotes === 1 ? "vote" : "votes"})
                         </span>
@@ -454,10 +454,10 @@ export default function AdminPage() {
       <>
         <div className="flex items-start justify-between mb-6">
           <div>
-            <h1 className="text-3xl sm:text-5xl font-black tracking-wider text-white">
+            <h1 className="text-3xl sm:text-5xl font-wide fw-semibold tracking-wider text-white">
               SUBMISSIONS
             </h1>
-            <p className="text-sm text-white/70 tracking-[0.15em] mt-1 font-bold">
+            <p className="text-sm text-white/70 tracking-[0.15em] mt-1 font-wide fw-light">
               ALL VIDEO ENTRIES
             </p>
           </div>
@@ -479,12 +479,12 @@ export default function AdminPage() {
               placeholder="Search by title..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full px-4 py-3 rounded-full border border-[#1a1a1a]/25 bg-white/40 text-sm text-[#1a1a1a] placeholder-[#1a1a1a]/40 focus:outline-none focus:border-[#1a1a1a]/60 transition-colors"
+              className="w-full px-4 py-3 rounded-full border border-[#1a1a1a]/25 bg-white/40 text-sm text-[#1a1a1a] placeholder-[#1a1a1a]/40 focus:outline-none focus:border-[#1a1a1a]/60 transition-colors font-narrow fw-medium"
             />
           </div>
 
           <div className="min-w-[680px]">
-          <div className="grid grid-cols-[60px_1fr_100px_100px_140px] px-5 py-3 border-b border-[#1a1a1a]/10 text-[10px] tracking-[0.15em] font-bold bg-[#1a1a1a] text-[#e8d44d]">
+          <div className="grid grid-cols-[60px_1fr_100px_100px_140px] px-5 py-3 border-b border-[#1a1a1a]/10 text-[10px] tracking-[0.15em] font-regular-w fw-semibold bg-[#1a1a1a] text-[#e8d44d]">
             <span>#</span>
             <span>VIDEO TITLE</span>
             <span className="text-center">AVG SCORE</span>
@@ -505,7 +505,7 @@ export default function AdminPage() {
                   {String(row.index).padStart(2, "0")}
                 </span>
                 <div>
-                  <div className="text-sm font-bold text-[#1a1a1a]">{row.title}</div>
+                  <div className="text-sm font-regular-w fw-medium text-[#1a1a1a]">{row.title}</div>
                   <div className="text-xs text-[#1a1a1a]/40 mt-0.5">{row.url}</div>
                 </div>
                 <div className="flex justify-center">
@@ -519,7 +519,7 @@ export default function AdminPage() {
                     </span>
                   )}
                 </div>
-                <div className="text-center text-sm font-bold text-[#1a1a1a]">{row.totalVotes}</div>
+                <div className="text-center text-sm font-wide fw-medium text-[#1a1a1a]">{row.totalVotes}</div>
                 <div className="text-right">
                   <span
                     className={`inline-flex items-center gap-1.5 px-3 py-1 text-[10px] tracking-[0.1em] font-bold ${
@@ -554,10 +554,10 @@ export default function AdminPage() {
       <>
         <div className="flex items-start justify-between mb-6">
           <div>
-            <h1 className="text-3xl sm:text-5xl font-black tracking-wider text-white">
+            <h1 className="text-3xl sm:text-5xl font-wide fw-semibold tracking-wider text-white">
               JUDGES
             </h1>
-            <p className="text-sm text-white/70 tracking-[0.15em] mt-1 font-bold">
+            <p className="text-sm text-white/70 tracking-[0.15em] mt-1 font-wide fw-light">
               AUDIENCE MEMBERS
             </p>
           </div>
@@ -579,12 +579,12 @@ export default function AdminPage() {
               placeholder="Search by judge name..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full px-4 py-3 rounded-full border border-[#1a1a1a]/25 bg-white/40 text-sm text-[#1a1a1a] placeholder-[#1a1a1a]/40 focus:outline-none focus:border-[#1a1a1a]/60 transition-colors"
+              className="w-full px-4 py-3 rounded-full border border-[#1a1a1a]/25 bg-white/40 text-sm text-[#1a1a1a] placeholder-[#1a1a1a]/40 focus:outline-none focus:border-[#1a1a1a]/60 transition-colors font-narrow fw-medium"
             />
           </div>
 
           <div className="min-w-[680px]">
-          <div className="grid grid-cols-[60px_1fr_120px_100px_180px] px-5 py-3 border-b border-[#1a1a1a]/10 text-[10px] tracking-[0.15em] font-bold bg-[#1a1a1a] text-[#e8d44d]">
+          <div className="grid grid-cols-[60px_1fr_120px_100px_180px] px-5 py-3 border-b border-[#1a1a1a]/10 text-[10px] tracking-[0.15em] font-regular-w fw-semibold bg-[#1a1a1a] text-[#e8d44d]">
             <span>#</span>
             <span>JUDGE</span>
             <span className="text-center">VIDEOS JUDGED</span>
@@ -621,7 +621,7 @@ export default function AdminPage() {
                         {judge.userName.charAt(0).toUpperCase()}
                       </div>
                       <div>
-                        <div className="text-sm font-bold text-[#1a1a1a]">{judge.userName}</div>
+                        <div className="text-sm font-regular-w fw-medium text-[#1a1a1a]">{judge.userName}</div>
                         {judge.userName !== judge.userId && (
                           <div className="text-[10px] text-[#1a1a1a]/40">{judge.userId}</div>
                         )}
@@ -636,7 +636,7 @@ export default function AdminPage() {
                       </svg>
                     </div>
                     <div className="text-center">
-                      <span className="text-sm font-bold text-[#1a1a1a]">
+                      <span className="text-sm font-regular-w fw-medium text-[#1a1a1a]">
                         {judge.videosJudged}
                       </span>
                       <span className="text-xs text-[#1a1a1a]/40">
@@ -721,10 +721,10 @@ export default function AdminPage() {
       <>
         <div className="flex items-start justify-between mb-6">
           <div>
-            <h1 className="text-3xl sm:text-5xl font-black tracking-wider text-white">
+            <h1 className="text-3xl sm:text-5xl font-wide fw-semibold tracking-wider text-white">
               LEADERBOARD
             </h1>
-            <p className="text-sm text-white/70 tracking-[0.15em] mt-1 font-bold">
+            <p className="text-sm text-white/70 tracking-[0.15em] mt-1 font-wide fw-light">
               VIDEOS RANKED BY SCORE
             </p>
           </div>
@@ -746,12 +746,12 @@ export default function AdminPage() {
               placeholder="Search by video title..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full px-4 py-3 rounded-full border border-[#1a1a1a]/25 bg-white/40 text-sm text-[#1a1a1a] placeholder-[#1a1a1a]/40 focus:outline-none focus:border-[#1a1a1a]/60 transition-colors"
+              className="w-full px-4 py-3 rounded-full border border-[#1a1a1a]/25 bg-white/40 text-sm text-[#1a1a1a] placeholder-[#1a1a1a]/40 focus:outline-none focus:border-[#1a1a1a]/60 transition-colors font-narrow fw-medium"
             />
           </div>
 
           <div className="min-w-[680px]">
-          <div className="grid grid-cols-[60px_1fr_120px_100px_180px] px-5 py-3 border-b border-[#1a1a1a]/10 text-[10px] tracking-[0.15em] font-bold bg-[#1a1a1a] text-[#e8d44d]">
+          <div className="grid grid-cols-[60px_1fr_120px_100px_180px] px-5 py-3 border-b border-[#1a1a1a]/10 text-[10px] tracking-[0.15em] font-regular-w fw-semibold bg-[#1a1a1a] text-[#e8d44d]">
             <span>RANK</span>
             <span>VIDEO</span>
             <span className="text-center">AVG SCORE</span>
@@ -782,7 +782,7 @@ export default function AdminPage() {
                     {String(rank).padStart(2, "0")}
                   </span>
                   <div>
-                    <div className="text-sm font-bold text-[#1a1a1a]">{video.title}</div>
+                    <div className="text-sm font-regular-w fw-medium text-[#1a1a1a]">{video.title}</div>
                     <div className="text-xs text-[#1a1a1a]/40">
                       Entry #{video.index}
                     </div>
@@ -792,7 +792,7 @@ export default function AdminPage() {
                       {video.avgScore}
                     </span>
                   </div>
-                  <div className="text-center text-sm font-bold text-[#1a1a1a]">
+                  <div className="text-center text-sm font-wide fw-medium text-[#1a1a1a]">
                     {video.totalVotes}
                   </div>
                   <div className="text-sm text-[#1a1a1a]/70">
@@ -874,7 +874,7 @@ export default function AdminPage() {
           />
         </div>
         <div className="text-right">
-          <div className="text-white/85 text-sm sm:text-base font-bold italic tracking-wide">
+          <div className="text-white/85 text-sm sm:text-base font-wide fw-medium tracking-wide">
             ADMIN PANEL
           </div>
           <div className="flex items-center gap-2 mt-1 sm:mt-2 justify-end">
@@ -906,26 +906,35 @@ export default function AdminPage() {
           <div>
             {sidebarItems.map((group) => (
               <div key={group.section}>
-                <div className="text-[10px] tracking-[0.2em] text-white/50 mb-3 mt-5 first:mt-0 font-bold">
+                <div className="text-[10px] tracking-[0.2em] text-white/50 mb-3 mt-5 first:mt-0 font-wide fw-medium">
                   {group.section}
                 </div>
                 <nav className="space-y-1">
-                  {group.items.map((item) => (
-                    <button
-                      key={item.key}
-                      onClick={() => {
-                        setActiveView(item.key);
-                        setMobileNavOpen(false);
-                      }}
-                      className={`w-full flex items-center gap-3 px-3 py-2 text-sm transition-colors text-left font-bold tracking-wide ${
-                        activeView === item.key
-                          ? "bg-black/40 text-[#e8d44d] rounded"
-                          : "text-[#e8d44d]/75 hover:text-[#e8d44d] hover:bg-black/20 rounded"
-                      }`}
-                    >
-                      {item.label}
-                    </button>
-                  ))}
+                  {group.items.map((item) => {
+                    const isActive = activeView === item.key;
+                    const isManage = group.section === "MANAGE";
+                    const fontClass = isActive
+                      ? "font-wide fw-bold"
+                      : isManage
+                        ? "font-wide fw-semibold"
+                        : "font-regular-w fw-medium";
+                    return (
+                      <button
+                        key={item.key}
+                        onClick={() => {
+                          setActiveView(item.key);
+                          setMobileNavOpen(false);
+                        }}
+                        className={`w-full flex items-center gap-3 px-3 py-2 text-sm transition-colors text-left tracking-wide ${fontClass} ${
+                          isActive
+                            ? "bg-black/40 text-[#e8d44d] rounded"
+                            : "text-[#e8d44d]/75 hover:text-[#e8d44d] hover:bg-black/20 rounded"
+                        }`}
+                      >
+                        {item.label}
+                      </button>
+                    );
+                  })}
                 </nav>
               </div>
             ))}

@@ -106,7 +106,7 @@ export default function LoginPage() {
                   type="button"
                   onClick={() => setMode("password")}
                   className="w-full py-4 bg-transparent border-2 border-[#e8d44d] rounded-full
-                             text-[#e8d44d] text-sm font-black tracking-[0.25em]
+                             text-[#e8d44d] text-sm font-wide fw-medium tracking-[0.25em]
                              hover:bg-[#e8d44d]/10 transition-colors"
                 >
                   ADMIN
@@ -114,7 +114,7 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={() => setMode("name")}
-                  className="relative w-full py-4 rounded-full bg-[#1a1a1a] text-white text-sm font-black tracking-[0.25em]
+                  className="relative w-full py-4 rounded-full bg-[#1a1a1a] text-white text-sm font-wide fw-medium tracking-[0.25em]
                              shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_2px_6px_rgba(0,0,0,0.35)]
                              hover:bg-[#2a2a2a] transition-all overflow-hidden"
                 >
@@ -133,7 +133,7 @@ export default function LoginPage() {
                   placeholder="ENTER YOUR NAME"
                   autoFocus
                   className="w-full px-6 py-4 bg-transparent border-2 border-[#e8d44d]/60 rounded-full
-                             text-[#e8d44d] placeholder-[#e8d44d]/70 text-center text-sm font-bold
+                             text-[#e8d44d] placeholder-[#e8d44d]/70 text-center text-sm font-regular-w fw-thin
                              tracking-[0.2em] focus:outline-none focus:border-[#e8d44d] transition-colors"
                 />
                 <input
@@ -145,7 +145,7 @@ export default function LoginPage() {
                   }}
                   placeholder="ENTER PASSWORD"
                   className="w-full px-6 py-4 bg-transparent border-2 border-[#e8d44d]/60 rounded-full
-                             text-[#e8d44d] placeholder-[#e8d44d]/70 text-center text-sm font-bold
+                             text-[#e8d44d] placeholder-[#e8d44d]/70 text-center text-sm font-regular-w fw-thin
                              tracking-[0.2em] focus:outline-none focus:border-[#e8d44d] transition-colors"
                 />
                 {error && (
@@ -154,7 +154,7 @@ export default function LoginPage() {
                 <button
                   type="submit"
                   disabled={!name.trim() || !judgePassword}
-                  className="relative w-full py-4 rounded-full bg-[#1a1a1a] text-white text-sm font-black tracking-[0.25em]
+                  className="relative w-full py-4 rounded-full bg-[#1a1a1a] text-white text-sm font-wide fw-medium tracking-[0.25em]
                              shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_2px_6px_rgba(0,0,0,0.35)]
                              hover:bg-[#2a2a2a] disabled:opacity-40 disabled:cursor-not-allowed transition-all overflow-hidden"
                 >
@@ -174,7 +174,7 @@ export default function LoginPage() {
             {mode === "password" && (
               <form onSubmit={handlePasswordSubmit} className="space-y-4">
                 <div className="mb-2">
-                  <span className="inline-flex items-center border border-[#e8d44d]/40 text-[#e8d44d] px-5 py-1.5 text-[10px] font-bold tracking-[0.2em] rounded-full">
+                  <span className="inline-flex items-center justify-center w-full border border-[#e8d44d] bg-[#e8d44d] text-[#8b0000] px-5 py-2 text-xs font-wide fw-semibold tracking-[0.2em] rounded-full">
                     ADMIN ACCESS
                   </span>
                 </div>
@@ -188,14 +188,14 @@ export default function LoginPage() {
                   placeholder="ENTER PASSWORD"
                   autoFocus
                   className="w-full px-6 py-4 bg-transparent border-2 border-[#e8d44d]/60 rounded-full
-                             text-[#e8d44d] placeholder-[#e8d44d]/70 text-center text-sm font-bold
+                             text-[#e8d44d] placeholder-[#e8d44d]/70 text-center text-sm font-regular-w fw-thin
                              tracking-[0.2em] focus:outline-none focus:border-[#e8d44d] transition-colors"
                 />
                 {error && <p className="text-red-300 text-xs">{error}</p>}
                 <button
                   type="submit"
                   disabled={!password}
-                  className="relative w-full py-4 rounded-full bg-[#1a1a1a] text-white text-sm font-black tracking-[0.25em]
+                  className="relative w-full py-4 rounded-full bg-[#1a1a1a] text-white text-sm font-wide fw-medium tracking-[0.25em]
                              shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_2px_6px_rgba(0,0,0,0.35)]
                              hover:bg-[#2a2a2a] disabled:opacity-40 disabled:cursor-not-allowed transition-all overflow-hidden"
                 >
