@@ -27,7 +27,7 @@ export default function AdminPage() {
     const role = localStorage.getItem("user-role");
     const name = localStorage.getItem("user-name");
     if (role !== "admin") {
-      router.replace("/");
+      router.replace("/admin/login");
     } else {
       setAuthorized(true);
       setAdminName(name || "Admin");

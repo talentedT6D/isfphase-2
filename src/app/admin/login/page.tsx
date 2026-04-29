@@ -3,30 +3,23 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-const JUDGE_PASSWORD = process.env.NEXT_PUBLIC_JUDGE_PASSWORD || "judge123";
+const ADMIN_NAME = "admin";
+const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || "admin123";
 
-export default function LoginPage() {
+export default function AdminLoginPage() {
   const router = useRouter();
-  const [name, setName] = useState("");
-  const [judgePassword, setJudgePassword] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const trimmed = name.trim();
-    if (!trimmed) return;
-
-    if (judgePassword !== JUDGE_PASSWORD) {
+    if (password === ADMIN_PASSWORD) {
+      localStorage.setItem("user-name", ADMIN_NAME);
+      localStorage.setItem("user-role", "admin");
+      router.push("/admin");
+    } else {
       setError("Incorrect password");
-      return;
     }
-
-    localStorage.setItem("user-name", trimmed);
-    localStorage.setItem(
-      "user-id",
-      `user-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`
-    );
-    router.push("/audience");
   };
 
   return (
@@ -57,7 +50,7 @@ export default function LoginPage() {
             fontWeight: 500,
           }}
         >
-          JUDGE PORTAL
+          ADMIN PANEL
         </div>
       </header>
 
@@ -76,40 +69,34 @@ export default function LoginPage() {
           {/* Form */}
           <div className="max-w-sm mx-auto">
             <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="mb-2">
+                <span className="inline-flex items-center justify-center w-full border border-[#e8d44d] bg-[#e8d44d] text-[#8b0000] px-5 py-2 text-xs font-wide fw-semibold tracking-[0.2em] rounded-full">
+                  ADMIN ACCESS
+                </span>
+              </div>
               <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="ENTER YOUR NAME"
+                type="password"
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  setError("");
+                }}
+                placeholder="ENTER PASSWORD"
                 autoFocus
                 className="w-full px-6 py-4 bg-transparent border-2 border-[#e8d44d]/60 rounded-full
                            text-[#e8d44d] placeholder-[#e8d44d]/70 text-center text-sm font-regular-w fw-thin
                            tracking-[0.2em] focus:outline-none focus:border-[#e8d44d] transition-colors"
               />
-              <input
-                type="password"
-                value={judgePassword}
-                onChange={(e) => {
-                  setJudgePassword(e.target.value);
-                  setError("");
-                }}
-                placeholder="ENTER PASSWORD"
-                className="w-full px-6 py-4 bg-transparent border-2 border-[#e8d44d]/60 rounded-full
-                           text-[#e8d44d] placeholder-[#e8d44d]/70 text-center text-sm font-regular-w fw-thin
-                           tracking-[0.2em] focus:outline-none focus:border-[#e8d44d] transition-colors"
-              />
-              {error && (
-                <p className="text-red-300 text-xs text-center">{error}</p>
-              )}
+              {error && <p className="text-red-300 text-xs text-center">{error}</p>}
               <button
                 type="submit"
-                disabled={!name.trim() || !judgePassword}
+                disabled={!password}
                 className="relative w-full py-4 rounded-full bg-[#1a1a1a] text-white text-sm font-wide fw-medium tracking-[0.25em]
                            shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_2px_6px_rgba(0,0,0,0.35)]
                            hover:bg-[#2a2a2a] disabled:opacity-40 disabled:cursor-not-allowed transition-all overflow-hidden"
               >
                 <span className="grain-overlay absolute inset-0 rounded-full opacity-40" />
-                <span className="relative">JOIN AS JUDGE</span>
+                <span className="relative">ENTER AS ADMIN</span>
               </button>
             </form>
           </div>
