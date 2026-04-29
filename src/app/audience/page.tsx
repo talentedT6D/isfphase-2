@@ -349,7 +349,7 @@ export default function AudiencePage() {
                 {currentVideo?.title || "Untitled"}
               </h2>
               <div className="flex items-center gap-3 mt-1 text-white/70 text-xs font-bold tracking-widest">
-                <span>@CREATOR</span>
+                <span>{currentVideo?.creator ?? "@CREATOR"}</span>
                 <span>&bull;</span>
                 <span>{duration > 0 ? formatTime(duration) : "--:--"}</span>
               </div>
