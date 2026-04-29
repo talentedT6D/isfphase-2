@@ -131,6 +131,26 @@ export default function AudiencePage() {
     }, 800);
   }, [currentVideo, score, userId, videoIndex]);
 
+  const toggleFullscreen = useCallback(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(() => {});
+      return;
+    }
+    const el = video as HTMLVideoElement & {
+      webkitEnterFullscreen?: () => void;
+      webkitRequestFullscreen?: () => Promise<void>;
+    };
+    if (typeof el.webkitEnterFullscreen === "function") {
+      el.webkitEnterFullscreen();
+    } else if (typeof el.requestFullscreen === "function") {
+      el.requestFullscreen().catch(() => {});
+    } else if (typeof el.webkitRequestFullscreen === "function") {
+      el.webkitRequestFullscreen().catch(() => {});
+    }
+  }, []);
+
   const skipEntry = useCallback(() => {
     if (videoIndex < PLAYLIST.length - 1) {
       setVideoIndex((i) => i + 1);
@@ -336,6 +356,21 @@ export default function AudiencePage() {
                   </div>
                 </button>
               )}
+
+              {/* Fullscreen button */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleFullscreen();
+                }}
+                className="absolute bottom-2 right-2 w-9 h-9 rounded-full bg-black/50 backdrop-blur-sm border border-[#e8d44d]/40 flex items-center justify-center text-[#e8d44d] hover:bg-black/70 hover:border-[#e8d44d]/70 transition-colors"
+                title="Toggle fullscreen"
+                aria-label="Toggle fullscreen"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M3 9V5a2 2 0 0 1 2-2h4M21 9V5a2 2 0 0 0-2-2h-4M3 15v4a2 2 0 0 0 2 2h4M21 15v4a2 2 0 0 1-2 2h-4" />
+                </svg>
+              </button>
             </div>
           </div>
         </div>
