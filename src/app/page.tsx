@@ -3,7 +3,14 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-const JUDGE_PASSWORD = process.env.NEXT_PUBLIC_JUDGE_PASSWORD || "judge123";
+const JUDGES: Record<string, string> = {
+  varun: "va2107",
+  gautam: "ga2107",
+  pg: "pg2107",
+  namrata: "na2107",
+  viren: "vi2107",
+  javaad: "ja2107",
+};
 
 export default function LoginPage() {
   const router = useRouter();
@@ -16,16 +23,20 @@ export default function LoginPage() {
     const trimmed = name.trim();
     if (!trimmed) return;
 
-    if (judgePassword !== JUDGE_PASSWORD) {
+    const key = trimmed.toLowerCase();
+    const expected = JUDGES[key];
+    if (!expected) {
+      setError("Unknown judge name");
+      return;
+    }
+    if (judgePassword !== expected) {
       setError("Incorrect password");
       return;
     }
 
-    localStorage.setItem("user-name", trimmed);
-    localStorage.setItem(
-      "user-id",
-      `user-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`
-    );
+    const displayName = trimmed.charAt(0).toUpperCase() + trimmed.slice(1).toLowerCase();
+    localStorage.setItem("user-name", displayName);
+    localStorage.setItem("user-id", `judge-${key}`);
     router.push("/audience");
   };
 
