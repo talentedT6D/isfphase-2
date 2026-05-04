@@ -22,6 +22,7 @@ export default function AudiencePage() {
   const [submitError, setSubmitError] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const fullscreenRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const name = localStorage.getItem("user-name");
@@ -132,22 +133,36 @@ export default function AudiencePage() {
   }, [currentVideo, score, userId, videoIndex]);
 
   const toggleFullscreen = useCallback(() => {
+    const wrapper = fullscreenRef.current;
     const video = videoRef.current;
-    if (!video) return;
-    if (document.fullscreenElement) {
-      document.exitFullscreen().catch(() => {});
+    if (!wrapper || !video) return;
+    const doc = document as Document & {
+      webkitFullscreenElement?: Element | null;
+      webkitExitFullscreen?: () => Promise<void>;
+    };
+    if (doc.fullscreenElement || doc.webkitFullscreenElement) {
+      if (typeof document.exitFullscreen === "function") {
+        document.exitFullscreen().catch(() => {});
+      } else if (typeof doc.webkitExitFullscreen === "function") {
+        doc.webkitExitFullscreen().catch(() => {});
+      }
       return;
     }
-    const el = video as HTMLVideoElement & {
-      webkitEnterFullscreen?: () => void;
+    const el = wrapper as HTMLDivElement & {
       webkitRequestFullscreen?: () => Promise<void>;
     };
-    if (typeof el.webkitEnterFullscreen === "function") {
-      el.webkitEnterFullscreen();
-    } else if (typeof el.requestFullscreen === "function") {
+    if (typeof el.requestFullscreen === "function") {
       el.requestFullscreen().catch(() => {});
     } else if (typeof el.webkitRequestFullscreen === "function") {
       el.webkitRequestFullscreen().catch(() => {});
+    } else {
+      // iOS Safari fallback: native video fullscreen
+      const v = video as HTMLVideoElement & {
+        webkitEnterFullscreen?: () => void;
+      };
+      if (typeof v.webkitEnterFullscreen === "function") {
+        v.webkitEnterFullscreen();
+      }
     }
   }, []);
 
@@ -317,7 +332,7 @@ export default function AudiencePage() {
         {/* Left - Video Player */}
         <div className="flex items-center justify-center md:pr-8 w-full md:w-[45%] shrink-0">
           <div className="relative max-h-[48vh] md:max-h-full md:h-full aspect-[9/16] bg-black/40 border border-[#e8d44d]/20 rounded-lg overflow-hidden flex flex-col mx-auto">
-            <div className="flex-1 relative min-h-0">
+            <div ref={fullscreenRef} className="fs-video-wrap flex-1 relative min-h-0">
               <video
                 ref={videoRef}
                 className="w-full h-full object-cover"
@@ -363,7 +378,7 @@ export default function AudiencePage() {
                   e.stopPropagation();
                   toggleFullscreen();
                 }}
-                className="absolute bottom-2 right-2 w-9 h-9 rounded-full bg-black/50 backdrop-blur-sm border border-[#e8d44d]/40 flex items-center justify-center text-[#e8d44d] hover:bg-black/70 hover:border-[#e8d44d]/70 transition-colors"
+                className="fs-exit-btn absolute bottom-2 right-2 w-9 h-9 rounded-full bg-black/50 backdrop-blur-sm border border-[#e8d44d]/40 flex items-center justify-center text-[#e8d44d] hover:bg-black/70 hover:border-[#e8d44d]/70 transition-colors z-10"
                 title="Toggle fullscreen"
                 aria-label="Toggle fullscreen"
               >
