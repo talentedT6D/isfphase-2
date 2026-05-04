@@ -7,7 +7,7 @@ const JUDGES: Record<string, string> = {
   varun: "va2107",
   gautam: "ga2107",
   pg: "pg2107",
-  namrata: "na2107",
+  namrata: "ngod2107",
   viren: "vi2107",
   javaad: "ja2107",
 };
