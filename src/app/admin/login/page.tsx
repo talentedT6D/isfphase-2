@@ -106,7 +106,7 @@ export default function AdminLoginPage() {
       {/* Footer */}
       <footer className="relative z-10 flex items-center justify-end px-5 sm:px-10 py-4 sm:py-6 gap-4 sm:gap-5">
         <a
-          href="https://instagram.com"
+          href="https://www.instagram.com/indianscrollfestival/"
           target="_blank"
           rel="noopener noreferrer"
           className="text-[#e8d44d]/80 hover:text-[#e8d44d] transition-colors"
@@ -118,7 +118,7 @@ export default function AdminLoginPage() {
           </svg>
         </a>
         <a
-          href="https://x.com"
+          href="https://x.com/indiascrollfest"
           target="_blank"
           rel="noopener noreferrer"
           className="text-[#e8d44d]/80 hover:text-[#e8d44d] transition-colors"

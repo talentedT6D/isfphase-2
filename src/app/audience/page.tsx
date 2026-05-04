@@ -558,7 +558,7 @@ export default function AudiencePage() {
         {/* Social handles */}
         <div className="flex items-center gap-4">
           <a
-            href="https://instagram.com"
+            href="https://www.instagram.com/indianscrollfestival/"
             target="_blank"
             rel="noopener noreferrer"
             className="text-[#e8d44d]/80 hover:text-[#e8d44d] transition-colors"
@@ -570,7 +570,7 @@ export default function AudiencePage() {
             </svg>
           </a>
           <a
-            href="https://x.com"
+            href="https://x.com/indiascrollfest"
             target="_blank"
             rel="noopener noreferrer"
             className="text-[#e8d44d]/80 hover:text-[#e8d44d] transition-colors"
