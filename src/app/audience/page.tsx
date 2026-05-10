@@ -351,7 +351,7 @@ export default function AudiencePage() {
         <div className="flex items-center gap-3 sm:gap-6">
           {/* Set toggle */}
           <div className="inline-flex items-center rounded-full border border-[#e8d44d]/40 p-[2px] bg-black/20">
-            {(["set1", "set2"] as const).map((s) => (
+            {(["set1", "set2", "set3"] as const).map((s) => (
               <button
                 key={s}
                 onClick={() => {
