@@ -10,7 +10,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-const SRC = "public/submissions";
+const SRC = "public/submission set two";
 const OUT = "src/lib/playlist.generated.ts";
 
 function parseInfoTxt(text) {
@@ -92,7 +92,7 @@ const playlist = folders.flatMap((folder) => {
       id,
       title,
       creator,
-      url: `/submissions/${encodeURIComponent(folder)}/${encodeURIComponent(videoFile)}`,
+      url: `/${encodeURIComponent("submission set two")}/${encodeURIComponent(folder)}/${encodeURIComponent(videoFile)}`,
     },
   ];
 });
