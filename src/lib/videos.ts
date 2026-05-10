@@ -3,6 +3,10 @@ export interface Video {
   title: string;
   url: string;
   creator?: string | null;
+  name?: string | null;
+  phone?: string | null;
+  email?: string | null;
+  category?: string | null;
 }
 
 // Generated at build/dev time from public/submissions(-set-2)/*/info.txt

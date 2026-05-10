@@ -31,10 +31,14 @@ function buildCsv(rows: RankedEntry[]): string {
   const header = [
     "rank",
     "title",
+    "name",
+    "phone",
     "creator",
+    "category",
     "set",
     "average_score",
     "vote_count",
+    "email",
     "video_id",
     "url",
   ];
@@ -44,10 +48,14 @@ function buildCsv(rows: RankedEntry[]): string {
       [
         r.rank,
         r.video.title,
+        r.video.name ?? "",
+        r.video.phone ?? "",
         r.video.creator ?? "",
+        r.video.category ?? "",
         r.set,
         r.avgScore,
         r.totalVotes,
+        r.video.email ?? "",
         r.video.id,
         r.video.url,
       ]
@@ -187,8 +195,13 @@ export default function Top50Page() {
                         {r.set.toUpperCase()}
                       </span>
                     </div>
-                    <div className="text-white/60 text-xs font-bold tracking-wider mt-0.5 truncate">
-                      {r.video.creator ?? "—"}
+                    <div className="text-white/70 text-xs font-bold tracking-wider mt-0.5 truncate">
+                      {r.video.name ?? r.video.creator ?? "—"}
+                      {r.video.phone ? (
+                        <span className="text-[#e8d44d]/70 ml-2 font-mono">
+                          · {r.video.phone}
+                        </span>
+                      ) : null}
                     </div>
                   </div>
 
@@ -228,7 +241,39 @@ export default function Top50Page() {
                     </div>
                     <dl className="text-sm space-y-2 self-start">
                       <InfoRow label="Title" value={r.video.title} />
-                      <InfoRow label="Creator" value={r.video.creator ?? "—"} />
+                      <InfoRow label="Name" value={r.video.name ?? "—"} />
+                      <InfoRow
+                        label="Phone"
+                        value={
+                          r.video.phone ? (
+                            <a
+                              href={`tel:${r.video.phone}`}
+                              className="text-[#e8d44d] underline font-mono"
+                            >
+                              {r.video.phone}
+                            </a>
+                          ) : (
+                            "—"
+                          )
+                        }
+                      />
+                      <InfoRow
+                        label="Email"
+                        value={
+                          r.video.email ? (
+                            <a
+                              href={`mailto:${r.video.email}`}
+                              className="text-[#e8d44d] underline break-all"
+                            >
+                              {r.video.email}
+                            </a>
+                          ) : (
+                            "—"
+                          )
+                        }
+                      />
+                      <InfoRow label="Instagram" value={r.video.creator ?? "—"} />
+                      <InfoRow label="Category" value={r.video.category ?? "—"} />
                       <InfoRow label="Set" value={r.set} />
                       <InfoRow label="Average score" value={`${r.avgScore} / 100`} />
                       <InfoRow label="Vote count" value={String(r.totalVotes)} />

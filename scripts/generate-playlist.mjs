@@ -15,6 +15,84 @@
 import fs from "node:fs";
 import path from "node:path";
 
+// Optional roster CSV — used to enrich each entry with the submitter's
+// real name and phone number (kept out of the public info.txt files).
+// Match is by submission title (lowercased + trimmed). Missing matches
+// just leave the fields null.
+const ROSTER_CSV = "public/submissions_rows (4200).csv";
+
+function parseCsv(text) {
+  const rows = [];
+  let row = [];
+  let cur = "";
+  let inQuotes = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (inQuotes) {
+      if (c === '"' && text[i + 1] === '"') {
+        cur += '"';
+        i++;
+      } else if (c === '"') {
+        inQuotes = false;
+      } else {
+        cur += c;
+      }
+    } else if (c === '"') {
+      inQuotes = true;
+    } else if (c === ",") {
+      row.push(cur);
+      cur = "";
+    } else if (c === "\n") {
+      row.push(cur);
+      rows.push(row);
+      row = [];
+      cur = "";
+    } else if (c === "\r") {
+      // skip
+    } else {
+      cur += c;
+    }
+  }
+  if (cur.length > 0 || row.length > 0) {
+    row.push(cur);
+    rows.push(row);
+  }
+  return rows;
+}
+
+function loadRoster() {
+  if (!fs.existsSync(ROSTER_CSV)) {
+    console.warn(`[playlist] ${ROSTER_CSV} not found — name/phone fields will be empty`);
+    return new Map();
+  }
+  const rows = parseCsv(fs.readFileSync(ROSTER_CSV, "utf8"));
+  if (rows.length < 2) return new Map();
+  const header = rows[0].map((h) => h.trim());
+  const idx = (k) => header.indexOf(k);
+  const tIdx = idx("submission_title");
+  const nIdx = idx("name");
+  const pIdx = idx("contact");
+  const eIdx = idx("email");
+  const cIdx = idx("category");
+  const map = new Map();
+  for (let i = 1; i < rows.length; i++) {
+    const r = rows[i];
+    if (!r || r.length === 0) continue;
+    const title = (r[tIdx] || "").trim().toLowerCase();
+    if (!title) continue;
+    map.set(title, {
+      name: (r[nIdx] || "").trim() || null,
+      phone: (r[pIdx] || "").trim() || null,
+      email: (r[eIdx] || "").trim() || null,
+      category: (r[cIdx] || "").trim() || null,
+    });
+  }
+  console.log(`[playlist] loaded ${map.size} roster rows from ${ROSTER_CSV}`);
+  return map;
+}
+
+const ROSTER = loadRoster();
+
 const SETS = [
   { name: "PLAYLIST_SET_1", dir: "public/submissions" },
   { name: "PLAYLIST_SET_2", dir: "public/submissions-set-2" },
@@ -84,6 +162,7 @@ function buildPlaylist(srcDir) {
       (info.Instagram && (info.Instagram.startsWith("@") ? info.Instagram : `@${info.Instagram}`)) ||
       info.Name ||
       null;
+    const roster = ROSTER.get(title.toLowerCase()) || null;
     // Strip the "public/" prefix so the URL is web-rooted.
     const urlBase = srcDir.replace(/^public\//, "");
     return [
@@ -92,6 +171,10 @@ function buildPlaylist(srcDir) {
         title,
         creator,
         url: `/${urlBase.split("/").map(encodeURIComponent).join("/")}/${encodeURIComponent(folder)}/${encodeURIComponent(videoFile)}`,
+        name: roster?.name ?? info.Name ?? null,
+        phone: roster?.phone ?? null,
+        email: roster?.email ?? info.Email ?? null,
+        category: roster?.category ?? info.Category ?? null,
       },
     ];
   });
