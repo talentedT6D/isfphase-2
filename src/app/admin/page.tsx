@@ -2,7 +2,13 @@
 
 import { useEffect, useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { PLAYLIST } from "@/lib/videos";
+import {
+  PLAYLIST,
+  SETS,
+  DEFAULT_SET,
+  getSetMeta,
+  type SubmissionSet,
+} from "@/lib/videos";
 import { isSupabaseConfigured } from "@/lib/supabase";
 import {
   useAllVideoRatings,
@@ -12,12 +18,14 @@ import {
 
 type View = "summary" | "leaderboard" | "submissions" | "judges" | "categories";
 const ENTRIES_PER_PAGE = 8;
+const ADMIN_ACTIVE_SET_KEY = "admin-active-set";
 
 export default function AdminPage() {
   const router = useRouter();
   const [authorized, setAuthorized] = useState(false);
   const [adminName, setAdminName] = useState("");
   const [activeView, setActiveView] = useState<View>("summary");
+  const [activeSet, setActiveSet] = useState<SubmissionSet>(DEFAULT_SET);
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [expandedJudge, setExpandedJudge] = useState<string | null>(null);
@@ -32,10 +40,30 @@ export default function AdminPage() {
       setAuthorized(true);
       setAdminName(name || "Admin");
     }
+    const storedSet = localStorage.getItem(
+      ADMIN_ACTIVE_SET_KEY
+    ) as SubmissionSet | null;
+    if (storedSet === "one" || storedSet === "two") {
+      setActiveSet(storedSet);
+    }
   }, [router]);
 
-  const { entries, loading: ratingsLoading } = useAllVideoRatings();
-  const { judges, loading: judgesLoading } = useJudgesData();
+  const switchSet = (next: SubmissionSet) => {
+    setActiveSet(next);
+    localStorage.setItem(ADMIN_ACTIVE_SET_KEY, next);
+    setPage(1);
+    setSearch("");
+    setExpandedJudge(null);
+    setExpandedVideo(null);
+  };
+
+  const setVideos = useMemo(
+    () => PLAYLIST.filter((v) => v.set === activeSet),
+    [activeSet]
+  );
+
+  const { entries, loading: ratingsLoading } = useAllVideoRatings(activeSet);
+  const { judges, loading: judgesLoading } = useJudgesData(activeSet);
 
   const ratingsMap = useMemo(() => {
     const map: Record<string, VideoRatingEntry> = {};
@@ -72,7 +100,7 @@ export default function AdminPage() {
   const [expandedVideo, setExpandedVideo] = useState<string | null>(null);
 
   const allRows = useMemo(() => {
-    return PLAYLIST.map((video, index) => {
+    return setVideos.map((video, index) => {
       const entry = ratingsMap[video.id];
       return {
         index: index + 1,
@@ -85,7 +113,7 @@ export default function AdminPage() {
         status: entry ? ("submitted" as const) : ("pending" as const),
       };
     });
-  }, [ratingsMap]);
+  }, [ratingsMap, setVideos]);
 
   const judgedRows = useMemo(
     () => allRows.filter((r) => r.status === "submitted"),
@@ -118,7 +146,7 @@ export default function AdminPage() {
             totalJudged
         )
       : 0;
-  const remaining = PLAYLIST.length - totalJudged;
+  const remaining = setVideos.length - totalJudged;
 
   const getPaginatedRows = <T,>(rows: T[]) => {
     const tp = Math.max(1, Math.ceil(rows.length / ENTRIES_PER_PAGE));
@@ -166,7 +194,7 @@ export default function AdminPage() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "judging-summary.csv";
+    a.download = `judging-summary-${getSetMeta(activeSet).shortLabel.toLowerCase().replace(/\s+/g, "-")}.csv`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -255,7 +283,7 @@ export default function AdminPage() {
               JUDGING SUMMARY
             </h1>
             <p className="text-sm text-white/70 tracking-[0.15em] mt-1 font-wide fw-light">
-              {adminName.toUpperCase()}
+              {adminName.toUpperCase()} &middot; {getSetMeta(activeSet).label.toUpperCase()}
             </p>
           </div>
           <button
@@ -276,7 +304,7 @@ export default function AdminPage() {
               {String(totalJudged).padStart(2, "0")}
             </div>
             <div className="text-xs text-[#e8d44d]/60 mt-1 tracking-wider font-bold">
-              OF {PLAYLIST.length} ASSIGNED
+              OF {setVideos.length} ASSIGNED
             </div>
           </div>
           <div>
@@ -462,7 +490,7 @@ export default function AdminPage() {
             </p>
           </div>
           <span className="text-sm text-[#e8d44d]/80 font-bold">
-            {PLAYLIST.length} total submissions
+            {setVideos.length} total submissions
           </span>
         </div>
 
@@ -546,7 +574,7 @@ export default function AdminPage() {
 
   function renderJudgesView() {
     const videoTitleMap: Record<string, string> = {};
-    for (const v of PLAYLIST) {
+    for (const v of setVideos) {
       videoTitleMap[v.id] = v.title;
     }
 
@@ -640,7 +668,7 @@ export default function AdminPage() {
                         {judge.videosJudged}
                       </span>
                       <span className="text-xs text-[#1a1a1a]/40">
-                        {" "}/ {PLAYLIST.length}
+                        {" "}/ {setVideos.length}
                       </span>
                     </div>
                     <div className="flex justify-center">
@@ -904,6 +932,30 @@ export default function AdminPage() {
           }`}
         >
           <div>
+            <div className="text-[10px] tracking-[0.2em] text-white/50 mb-3 first:mt-0 font-wide fw-medium">
+              SUBMISSION SET
+            </div>
+            <div className="grid grid-cols-2 gap-1 p-1 border border-[#e8d44d]/20 rounded-full mb-2">
+              {SETS.map((s) => {
+                const isActive = s.key === activeSet;
+                const count = PLAYLIST.filter((v) => v.set === s.key).length;
+                return (
+                  <button
+                    key={s.key}
+                    onClick={() => {
+                      if (s.key !== activeSet) switchSet(s.key);
+                    }}
+                    className={`py-1.5 rounded-full text-[10px] font-bold tracking-[0.15em] transition-colors ${
+                      isActive
+                        ? "bg-[#e8d44d] text-[#1a1a1a]"
+                        : "text-[#e8d44d]/70 hover:text-[#e8d44d] hover:bg-[#e8d44d]/10"
+                    }`}
+                  >
+                    {s.shortLabel} ({count})
+                  </button>
+                );
+              })}
+            </div>
             {sidebarItems.map((group) => (
               <div key={group.section}>
                 <div className="text-[10px] tracking-[0.2em] text-white/50 mb-3 mt-5 first:mt-0 font-wide fw-medium">

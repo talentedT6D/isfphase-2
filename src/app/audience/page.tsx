@@ -1,23 +1,32 @@
 "use client";
 
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { PLAYLIST } from "@/lib/videos";
+import {
+  PLAYLIST,
+  SETS,
+  DEFAULT_SET,
+  getSetMeta,
+  type SubmissionSet,
+} from "@/lib/videos";
 import { useAdminRatings } from "@/hooks/useRatings";
 import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 
-const SESSION_ID = "session-1";
+const ACTIVE_SET_KEY = "active-set";
 
 export default function AudiencePage() {
   const router = useRouter();
   const [userName, setUserName] = useState("");
   const [userId, setUserId] = useState("");
+  const [activeSet, setActiveSet] = useState<SubmissionSet>(DEFAULT_SET);
   const [videoIndex, setVideoIndex] = useState(0);
   const [score, setScore] = useState(50);
   const [playing, setPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [submittedScores, setSubmittedScores] = useState<Record<string, number>>({});
+  const [submittedScoresBySet, setSubmittedScoresBySet] = useState<
+    Record<SubmissionSet, Record<string, number>>
+  >({ one: {}, two: {} });
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
   const [submitError, setSubmitError] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -32,13 +41,35 @@ export default function AudiencePage() {
     }
     setUserName(name);
     setUserId(id || name);
+    const storedSet = localStorage.getItem(ACTIVE_SET_KEY) as SubmissionSet | null;
+    if (storedSet === "one" || storedSet === "two") {
+      setActiveSet(storedSet);
+    }
   }, [router]);
 
-  const currentVideo = PLAYLIST[videoIndex] || PLAYLIST[0];
-  const judgedCount = Object.keys(submittedScores).length;
-  const remaining = PLAYLIST.length - judgedCount;
+  const sessionId = getSetMeta(activeSet).sessionId;
 
-  const { averageRating, totalVotes } = useAdminRatings(currentVideo?.id || "");
+  const setVideos = useMemo(
+    () => PLAYLIST.filter((v) => v.set === activeSet),
+    [activeSet]
+  );
+  const submittedScores = submittedScoresBySet[activeSet];
+  const currentVideo = setVideos[videoIndex] || setVideos[0];
+  const judgedCount = Object.keys(submittedScores).length;
+  const remaining = setVideos.length - judgedCount;
+
+  const switchSet = useCallback((next: SubmissionSet) => {
+    setActiveSet(next);
+    localStorage.setItem(ACTIVE_SET_KEY, next);
+    setVideoIndex(0);
+    setSubmitStatus("idle");
+    setSubmitError("");
+  }, []);
+
+  const { averageRating, totalVotes } = useAdminRatings(
+    currentVideo?.id || "",
+    activeSet
+  );
 
   useEffect(() => {
     if (currentVideo && submittedScores[currentVideo.id] !== undefined) {
@@ -47,7 +78,7 @@ export default function AudiencePage() {
       setScore(50);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [videoIndex]);
+  }, [videoIndex, activeSet]);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -75,11 +106,11 @@ export default function AudiencePage() {
 
   const goToVideo = useCallback(
     (index: number) => {
-      if (index >= 0 && index < PLAYLIST.length) {
+      if (index >= 0 && index < setVideos.length) {
         setVideoIndex(index);
       }
     },
-    []
+    [setVideos.length]
   );
 
   const submitScore = useCallback(async () => {
@@ -109,7 +140,7 @@ export default function AudiencePage() {
       video_id: currentVideo.id,
       user_id: userId,
       user_name: userName,
-      session_id: SESSION_ID,
+      session_id: sessionId,
       rating: score,
       created_at: new Date().toISOString(),
     });
@@ -120,22 +151,25 @@ export default function AudiencePage() {
       return;
     }
 
-    setSubmittedScores((prev) => ({ ...prev, [currentVideo.id]: score }));
+    setSubmittedScoresBySet((prev) => ({
+      ...prev,
+      [activeSet]: { ...prev[activeSet], [currentVideo.id]: score },
+    }));
     setSubmitStatus("success");
 
     setTimeout(() => {
       setSubmitStatus("idle");
-      if (videoIndex < PLAYLIST.length - 1) {
+      if (videoIndex < setVideos.length - 1) {
         setVideoIndex((i) => i + 1);
       }
     }, 800);
-  }, [currentVideo, score, userId, videoIndex]);
+  }, [currentVideo, score, userId, userName, videoIndex, sessionId, activeSet, setVideos.length]);
 
   const skipEntry = useCallback(() => {
-    if (videoIndex < PLAYLIST.length - 1) {
+    if (videoIndex < setVideos.length - 1) {
       setVideoIndex((i) => i + 1);
     }
-  }, [videoIndex]);
+  }, [videoIndex, setVideos.length]);
 
   const formatTime = (seconds: number) => {
     const m = Math.floor(seconds / 60);
@@ -157,7 +191,7 @@ export default function AudiencePage() {
     router.replace("/");
   };
 
-  const allJudged = judgedCount === PLAYLIST.length;
+  const allJudged = setVideos.length > 0 && judgedCount === setVideos.length;
 
   if (!userName) return null;
 
@@ -198,11 +232,30 @@ export default function AudiencePage() {
               Thank You, {userName}!
             </h1>
             <p className="text-[#e8d44d]/70 text-sm tracking-[0.1em] mb-2">
-              You have judged all {PLAYLIST.length} entries.
+              You have judged all {setVideos.length} entries in {getSetMeta(activeSet).label}.
             </p>
-            <p className="text-[#e8d44d]/50 text-xs tracking-[0.05em] mb-10">
+            <p className="text-[#e8d44d]/50 text-xs tracking-[0.05em] mb-6">
               Your scores have been submitted successfully. The results will be announced soon.
             </p>
+
+            {SETS.some((s) => s.key !== activeSet) && (
+              <div className="mb-8 flex flex-col items-center gap-2">
+                <div className="text-[10px] tracking-[0.2em] text-[#e8d44d]/60 font-bold">
+                  SWITCH SET
+                </div>
+                <div className="flex gap-2">
+                  {SETS.filter((s) => s.key !== activeSet).map((s) => (
+                    <button
+                      key={s.key}
+                      onClick={() => switchSet(s.key)}
+                      className="px-4 py-2 border border-[#e8d44d]/40 text-[#e8d44d] text-[11px] font-bold tracking-[0.15em] hover:bg-[#e8d44d]/10 transition-colors"
+                    >
+                      JUDGE {s.shortLabel}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
             <div className="border border-[#e8d44d]/30 p-6 mb-8">
               <div className="grid grid-cols-3 gap-6 text-center">
@@ -268,12 +321,12 @@ export default function AudiencePage() {
               JUDGE PORTAL
             </div>
             <div className="text-[#e8d44d]/80 text-[10px] font-bold tracking-[0.2em] mt-1">
-              NOW JUDGING &mdash; ENTRY #{String(videoIndex + 1).padStart(2, "0")}
+              NOW JUDGING &mdash; {getSetMeta(activeSet).shortLabel} &middot; ENTRY #{String(videoIndex + 1).padStart(2, "0")}
             </div>
           </div>
           <div className="text-right sm:hidden">
             <div className="text-[#e8d44d]/90 text-[10px] font-bold tracking-[0.15em]">
-              ENTRY #{String(videoIndex + 1).padStart(2, "0")}
+              {getSetMeta(activeSet).shortLabel} &middot; ENTRY #{String(videoIndex + 1).padStart(2, "0")}
             </div>
           </div>
 
@@ -314,7 +367,7 @@ export default function AudiencePage() {
                 onPause={() => setPlaying(false)}
                 onEnded={() => {
                   setPlaying(false);
-                  if (videoIndex < PLAYLIST.length - 1) {
+                  if (videoIndex < setVideos.length - 1) {
                     setVideoIndex((i) => i + 1);
                   }
                 }}
@@ -442,7 +495,7 @@ export default function AudiencePage() {
               )}
               <button
                 onClick={skipEntry}
-                disabled={videoIndex >= PLAYLIST.length - 1}
+                disabled={videoIndex >= setVideos.length - 1}
                 className="flex-1 md:w-full py-3 rounded-full border-2 border-[#e8d44d] bg-transparent text-[#e8d44d] text-[12px] font-black tracking-[0.25em] hover:bg-[#e8d44d]/10 disabled:opacity-30 transition-colors"
               >
                 SKIP ENTRY
@@ -496,7 +549,7 @@ export default function AudiencePage() {
           </button>
           <button
             onClick={() => goToVideo(videoIndex + 1)}
-            disabled={videoIndex >= PLAYLIST.length - 1}
+            disabled={videoIndex >= setVideos.length - 1}
             className="w-9 h-9 rounded-full border border-[#e8d44d]/30 flex items-center justify-center text-[#e8d44d]/60 hover:border-[#e8d44d]/60 hover:text-[#e8d44d] disabled:opacity-20 transition-colors"
           >
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -550,7 +603,7 @@ export default function AudiencePage() {
                     {userName}
                   </div>
                   <div className="text-[#e8d44d]/50 text-[10px] tracking-wider">
-                    {judgedCount}/{PLAYLIST.length} JUDGED
+                    {judgedCount}/{setVideos.length} JUDGED &middot; {getSetMeta(activeSet).shortLabel}
                   </div>
                 </div>
               </div>
@@ -567,10 +620,36 @@ export default function AudiencePage() {
 
             <div className="flex-1 overflow-y-auto">
               <div className="px-6 pt-5 pb-2 text-[10px] tracking-[0.2em] text-[#e8d44d]/50 font-bold">
+                SUBMISSION SET
+              </div>
+              <div className="px-3 mb-2">
+                <div className="grid grid-cols-2 gap-1 p-1 border border-[#e8d44d]/20 rounded-full">
+                  {SETS.map((s) => {
+                    const isActive = s.key === activeSet;
+                    const count = PLAYLIST.filter((v) => v.set === s.key).length;
+                    return (
+                      <button
+                        key={s.key}
+                        onClick={() => {
+                          if (s.key !== activeSet) switchSet(s.key);
+                        }}
+                        className={`py-2 rounded-full text-[10px] font-bold tracking-[0.15em] transition-colors ${
+                          isActive
+                            ? "bg-[#e8d44d] text-[#1a1a1a]"
+                            : "text-[#e8d44d]/70 hover:text-[#e8d44d] hover:bg-[#e8d44d]/10"
+                        }`}
+                      >
+                        {s.shortLabel} ({count})
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+              <div className="px-6 pt-3 pb-2 text-[10px] tracking-[0.2em] text-[#e8d44d]/50 font-bold">
                 ENTRIES
               </div>
               <nav className="px-3">
-                {PLAYLIST.map((video, idx) => {
+                {setVideos.map((video, idx) => {
                   const isCurrent = idx === videoIndex;
                   const isJudged = submittedScores[video.id] !== undefined;
                   return (

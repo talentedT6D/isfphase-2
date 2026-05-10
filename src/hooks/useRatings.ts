@@ -2,12 +2,16 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { supabase, isSupabaseConfigured } from "@/lib/supabase";
-
-const SESSION_ID = "session-1";
+import { getSetMeta, type SubmissionSet } from "@/lib/videos";
 
 // Audience: submit rating for current video
-export function useAudienceRating(videoId: string, userId: string) {
+export function useAudienceRating(
+  videoId: string,
+  userId: string,
+  set: SubmissionSet
+) {
   const [rating, setRatingLocal] = useState(0);
+  const sessionId = getSetMeta(set).sessionId;
 
   // Reset when video changes
   useEffect(() => {
@@ -23,23 +27,24 @@ export function useAudienceRating(videoId: string, userId: string) {
         await supabase.from("ratings").upsert({
           video_id: videoId,
           user_id: userId,
-          session_id: SESSION_ID,
+          session_id: sessionId,
           rating: clamped,
         });
       }
     },
-    [videoId, userId]
+    [videoId, userId, sessionId]
   );
 
   return { rating, submitRating };
 }
 
 // Admin: listen to aggregate ratings for current video
-export function useAdminRatings(videoId: string) {
+export function useAdminRatings(videoId: string, set: SubmissionSet) {
   const [aggregate, setAggregate] = useState({
     averageRating: 0,
     totalVotes: 0,
   });
+  const sessionId = getSetMeta(set).sessionId;
 
   const fetchRatings = useCallback(async () => {
     if (!videoId || !isSupabaseConfigured) {
@@ -51,7 +56,7 @@ export function useAdminRatings(videoId: string) {
       .from("ratings")
       .select("rating")
       .eq("video_id", videoId)
-      .eq("session_id", SESSION_ID);
+      .eq("session_id", sessionId);
 
     if (error) {
       console.error("useAdminRatings: failed to fetch ratings", error.message);
@@ -66,7 +71,7 @@ export function useAdminRatings(videoId: string) {
     } else {
       setAggregate({ averageRating: 0, totalVotes: 0 });
     }
-  }, [videoId]);
+  }, [videoId, sessionId]);
 
   // Fetch on mount and when video changes
   useEffect(() => {
@@ -78,7 +83,7 @@ export function useAdminRatings(videoId: string) {
     if (!videoId || !isSupabaseConfigured) return;
 
     const channel = supabase
-      .channel(`ratings-${videoId}`)
+      .channel(`ratings-${sessionId}-${videoId}`)
       .on(
         "postgres_changes",
         {
@@ -96,7 +101,7 @@ export function useAdminRatings(videoId: string) {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [videoId, fetchRatings]);
+  }, [videoId, sessionId, fetchRatings]);
 
   return aggregate;
 }
@@ -109,9 +114,10 @@ export interface VideoRatingEntry {
   lastJudgedAt: string | null;
 }
 
-export function useAllVideoRatings() {
+export function useAllVideoRatings(set: SubmissionSet) {
   const [entries, setEntries] = useState<VideoRatingEntry[]>([]);
   const [loading, setLoading] = useState(true);
+  const sessionId = getSetMeta(set).sessionId;
 
   const fetchAll = useCallback(async () => {
     if (!isSupabaseConfigured) {
@@ -119,39 +125,12 @@ export function useAllVideoRatings() {
       setLoading(false);
       return;
     }
-
-    // Diagnostic: probe the ratings table without the session filter so we can
-    // see exactly what the client sees and what session_id values exist.
-    const probe = await supabase
-      .from("ratings")
-      .select("session_id, video_id, rating, created_at");
-    if (probe.error) {
-      console.error(
-        "[ratings-diagnostic] unfiltered probe failed",
-        probe.error.message
-      );
-    } else {
-      const rows = probe.data ?? [];
-      const bySession: Record<string, number> = {};
-      for (const r of rows) {
-        const s = String(r.session_id);
-        bySession[s] = (bySession[s] ?? 0) + 1;
-      }
-      console.log(
-        `[ratings-diagnostic] expected session_id="${SESSION_ID}" — total rows visible to client: ${rows.length}`,
-        { countsBySession: bySession, sampleRow: rows[0] ?? null }
-      );
-      if (rows.length > 0 && (bySession[SESSION_ID] ?? 0) === 0) {
-        console.warn(
-          `[ratings-diagnostic] Ratings exist, but NONE match session_id="${SESSION_ID}". Leaderboard filters them out. Actual session_ids in table: ${Object.keys(bySession).join(", ")}`
-        );
-      }
-    }
+    setLoading(true);
 
     const { data, error } = await supabase
       .from("ratings")
       .select("video_id, rating, created_at")
-      .eq("session_id", SESSION_ID)
+      .eq("session_id", sessionId)
       .order("created_at", { ascending: false });
 
     if (error) {
@@ -199,7 +178,7 @@ export function useAllVideoRatings() {
       setEntries([]);
     }
     setLoading(false);
-  }, []);
+  }, [sessionId]);
 
   useEffect(() => {
     fetchAll();
@@ -210,7 +189,7 @@ export function useAllVideoRatings() {
     if (!isSupabaseConfigured) return;
 
     const channel = supabase
-      .channel("all-ratings")
+      .channel(`all-ratings-${sessionId}`)
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "ratings" },
@@ -221,7 +200,7 @@ export function useAllVideoRatings() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [fetchAll]);
+  }, [sessionId, fetchAll]);
 
   return { entries, loading };
 }
@@ -236,9 +215,10 @@ export interface JudgeEntry {
   ratings: { videoId: string; score: number; createdAt: string | null }[];
 }
 
-export function useJudgesData() {
+export function useJudgesData(set: SubmissionSet) {
   const [judges, setJudges] = useState<JudgeEntry[]>([]);
   const [loading, setLoading] = useState(true);
+  const sessionId = getSetMeta(set).sessionId;
 
   const fetchJudges = useCallback(async () => {
     if (!isSupabaseConfigured) {
@@ -246,11 +226,12 @@ export function useJudgesData() {
       setLoading(false);
       return;
     }
+    setLoading(true);
 
     const { data, error } = await supabase
       .from("ratings")
       .select("user_id, user_name, video_id, rating, created_at")
-      .eq("session_id", SESSION_ID)
+      .eq("session_id", sessionId)
       .order("created_at", { ascending: false });
 
     if (error) {
@@ -317,7 +298,7 @@ export function useJudgesData() {
       setJudges([]);
     }
     setLoading(false);
-  }, []);
+  }, [sessionId]);
 
   useEffect(() => {
     fetchJudges();
@@ -327,7 +308,7 @@ export function useJudgesData() {
     if (!isSupabaseConfigured) return;
 
     const channel = supabase
-      .channel("judges-ratings")
+      .channel(`judges-ratings-${sessionId}`)
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "ratings" },
@@ -338,7 +319,7 @@ export function useJudgesData() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [fetchJudges]);
+  }, [sessionId, fetchJudges]);
 
   return { judges, loading };
 }
