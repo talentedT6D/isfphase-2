@@ -20,6 +20,7 @@ export default function AudiencePage() {
   const [submittedScores, setSubmittedScores] = useState<Record<string, number>>({});
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
   const [submitError, setSubmitError] = useState("");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -87,21 +88,36 @@ export default function AudiencePage() {
     setSubmitStatus("idle");
     setSubmitError("");
 
-    if (isSupabaseConfigured && userId) {
-      const { error } = await supabase.from("ratings").upsert({
-        video_id: currentVideo.id,
-        user_id: userId,
-        user_name: userName,
-        session_id: SESSION_ID,
-        rating: score,
-        created_at: new Date().toISOString(),
-      });
-      if (error) {
-        console.error("Failed to submit rating:", error.message);
-        setSubmitStatus("error");
-        setSubmitError(error.message);
-        return;
-      }
+    if (!isSupabaseConfigured) {
+      console.error(
+        "Supabase is not configured — set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY"
+      );
+      setSubmitStatus("error");
+      setSubmitError(
+        "Backend not configured. Your score was not saved. Please contact the organizer."
+      );
+      return;
+    }
+
+    if (!userId) {
+      setSubmitStatus("error");
+      setSubmitError("Missing user id. Please log in again.");
+      return;
+    }
+
+    const { error } = await supabase.from("ratings").upsert({
+      video_id: currentVideo.id,
+      user_id: userId,
+      user_name: userName,
+      session_id: SESSION_ID,
+      rating: score,
+      created_at: new Date().toISOString(),
+    });
+    if (error) {
+      console.error("Failed to submit rating:", error.message);
+      setSubmitStatus("error");
+      setSubmitError(error.message);
+      return;
     }
 
     setSubmittedScores((prev) => ({ ...prev, [currentVideo.id]: score }));
@@ -147,30 +163,30 @@ export default function AudiencePage() {
 
   if (allJudged) {
     return (
-      <div className="h-screen bg-[#0a0a0a] flex flex-col relative overflow-hidden">
+      <div className="h-screen bg-[#5a0404] flex flex-col relative overflow-hidden">
         <div
           className="absolute inset-0"
           style={{
             background:
-              "radial-gradient(ellipse 80% 50% at 50% 75%, #c41a1a 0%, #8b0000 35%, #3a0000 60%, #0a0a0a 100%)",
-          }}
-        />
-        <img
-          src="/header-bar.png"
-          alt=""
-          className="absolute top-0 left-0 w-full pointer-events-none"
-          style={{
-            height: "30%",
-            objectFit: "fill",
-            filter: "sepia(1) saturate(3) brightness(0.12) hue-rotate(350deg)",
+              "radial-gradient(ellipse 110% 90% at 50% 60%, #d41414 0%, #a80c0c 45%, #6a0606 80%, #3a0202 100%)",
           }}
         />
         <div className="absolute inset-0 grain-overlay opacity-10" />
 
         {/* Header */}
-        <header className="relative z-10 flex items-center justify-between px-8 py-4">
-          <img src="/isf-logo-vertical.png" alt="ISF Logo" className="h-16 w-auto" />
-          <div className="text-[#e8d44d]/80 text-sm font-bold italic tracking-wide">
+        <header className="relative z-10 flex items-center justify-between px-4 sm:px-10 pt-4 sm:pt-6 pb-2 sm:pb-3 shrink-0">
+          <img
+            src="/isf-horizontal-logo.png"
+            alt="Indian Scroll Festival"
+            className="h-7 sm:h-10 w-auto"
+          />
+          <div
+            className="text-white text-lg sm:text-2xl tracking-[0.2em]"
+            style={{
+              fontFamily: '"obviously-wide", "obviously", sans-serif',
+              fontWeight: 500,
+            }}
+          >
             JUDGE PORTAL
           </div>
         </header>
@@ -220,57 +236,67 @@ export default function AudiencePage() {
   }
 
   return (
-    <div className="h-screen bg-[#0a0a0a] flex flex-col overflow-hidden relative">
+    <div className="h-screen bg-[#5a0404] flex flex-col overflow-hidden relative">
       {/* Red gradient background */}
       <div
         className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse 90% 50% at 50% 85%, #c41a1a 0%, #8b0000 30%, #3a0000 55%, #0a0a0a 100%)",
-        }}
-      />
-
-      {/* Header bar shape (transparent PNG, tinted dark red) */}
-      <img
-        src="/header-bar.png"
-        alt=""
-        className="absolute top-0 left-0 w-full pointer-events-none"
-        style={{
-          height: "30%",
-          objectFit: "fill",
-          filter: "sepia(1) saturate(3) brightness(0.12) hue-rotate(350deg)",
+            "radial-gradient(ellipse 110% 90% at 50% 60%, #d41414 0%, #a80c0c 45%, #6a0606 80%, #3a0202 100%)",
         }}
       />
 
       <div className="absolute inset-0 grain-overlay opacity-10" />
 
       {/* Header */}
-      <header className="relative z-10 flex items-center justify-between px-8 py-4 shrink-0">
-        <img src="/isf-logo-vertical.png" alt="ISF Logo" className="h-16 w-auto" />
+      <header className="relative z-10 flex items-center justify-between px-4 sm:px-10 pt-4 sm:pt-6 pb-2 sm:pb-3 shrink-0">
+        <img
+          src="/isf-horizontal-logo.png"
+          alt="Indian Scroll Festival"
+          className="h-7 sm:h-10 w-auto"
+        />
 
-        <div className="text-[#e8d44d]/70 text-xs font-bold tracking-[0.15em]">
-          NOW JUDGING &mdash; ENTRY #{String(videoIndex + 1).padStart(2, "0")}
-        </div>
+        <div className="flex items-center gap-3 sm:gap-6">
+          <div className="text-right hidden sm:block">
+            <div
+              className="text-white text-xl sm:text-2xl tracking-[0.2em]"
+              style={{
+                fontFamily: '"obviously-wide", "obviously", sans-serif',
+                fontWeight: 500,
+              }}
+            >
+              JUDGE PORTAL
+            </div>
+            <div className="text-[#e8d44d]/80 text-[10px] font-bold tracking-[0.2em] mt-1">
+              NOW JUDGING &mdash; ENTRY #{String(videoIndex + 1).padStart(2, "0")}
+            </div>
+          </div>
+          <div className="text-right sm:hidden">
+            <div className="text-[#e8d44d]/90 text-[10px] font-bold tracking-[0.15em]">
+              ENTRY #{String(videoIndex + 1).padStart(2, "0")}
+            </div>
+          </div>
 
-        <div className="flex flex-col items-center gap-1">
-          <button
-            onClick={handleLogout}
-            className="w-14 h-14 rounded-full bg-[#1a1a1a] border-2 border-[#e8d44d]/30 flex items-center justify-center text-lg font-bold text-[#e8d44d] hover:bg-[#e8d44d]/10 transition-colors"
-            title="Logout"
-          >
-            {userName.charAt(0).toUpperCase()}
-          </button>
-          <span className="text-[#e8d44d]/60 text-[10px] tracking-wider">
-            {userName}
-          </span>
+          <div className="flex flex-col items-center gap-1">
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#1a1a1a] border-2 border-[#e8d44d]/40 flex items-center justify-center text-sm sm:text-base font-bold text-[#e8d44d] hover:bg-[#e8d44d]/10 transition-colors"
+              title="Open menu"
+            >
+              {userName.charAt(0).toUpperCase()}
+            </button>
+            <span className="hidden sm:inline text-[#e8d44d]/80 text-[10px] tracking-wider font-bold uppercase">
+              {userName}
+            </span>
+          </div>
         </div>
       </header>
 
       {/* Main Layout */}
-      <main className="relative z-10 flex-1 flex min-h-0 px-6 pb-4">
+      <main className="relative z-10 flex-1 flex flex-col md:flex-row min-h-0 px-4 sm:px-6 pb-4 gap-4 md:gap-0 overflow-y-auto md:overflow-hidden">
         {/* Left - Video Player */}
-        <div className="flex items-center justify-center pr-8" style={{ width: "45%" }}>
-          <div className="relative h-full max-h-full aspect-[9/16] bg-black/40 border border-[#e8d44d]/20 rounded-lg overflow-hidden flex flex-col">
+        <div className="flex items-center justify-center md:pr-8 w-full md:w-[45%] shrink-0">
+          <div className="relative max-h-[48vh] md:max-h-full md:h-full aspect-[9/16] bg-black/40 border border-[#e8d44d]/20 rounded-lg overflow-hidden flex flex-col mx-auto">
             <div className="flex-1 relative min-h-0">
               <video
                 ref={videoRef}
@@ -315,15 +341,15 @@ export default function AudiencePage() {
         </div>
 
         {/* Right - Judging Panel */}
-        <div className="flex-1 flex flex-col justify-center py-4" style={{ maxWidth: "550px" }}>
-          <div className="space-y-5">
+        <div className="flex-1 flex flex-col justify-center py-2 md:py-4 w-full md:max-w-[520px]">
+          <div className="space-y-3 sm:space-y-4">
             {/* Entry Info */}
             <div>
-              <h2 className="text-[#e8d44d] text-[32px] font-black tracking-wider leading-tight">
+              <h2 className="text-white text-3xl sm:text-4xl font-black italic tracking-wider leading-tight uppercase">
                 {currentVideo?.title || "Untitled"}
               </h2>
-              <div className="flex items-center gap-3 mt-2 text-[#e8d44d]/60 text-sm">
-                <span>@creator</span>
+              <div className="flex items-center gap-3 mt-1 text-white/70 text-xs font-bold tracking-widest">
+                <span>{currentVideo?.creator ?? "@CREATOR"}</span>
                 <span>&bull;</span>
                 <span>{duration > 0 ? formatTime(duration) : "--:--"}</span>
               </div>
@@ -331,9 +357,9 @@ export default function AudiencePage() {
 
             {/* Progress Bar */}
             <div>
-              <div className="w-full h-[6px] bg-[#e8d44d]/20 rounded-full overflow-hidden">
+              <div className="w-full h-[6px] bg-white/20 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-[#e8d44d] rounded-full transition-all duration-200"
+                  className="h-full bg-white rounded-full transition-all duration-200"
                   style={{
                     width:
                       duration > 0
@@ -342,25 +368,29 @@ export default function AudiencePage() {
                   }}
                 />
               </div>
-              <div className="flex justify-end mt-1">
-                <span className="text-[#e8d44d]/50 text-[10px]">
+              <div className="flex justify-start mt-1">
+                <span className="text-white/60 text-[10px]">
                   {formatTime(currentTime)}
                 </span>
               </div>
             </div>
 
-            {/* Score Section */}
-            <div className="pt-4">
-              <div className="flex items-baseline gap-2 mb-6">
-                <span className="text-[#e8d44d] text-6xl font-black tabular-nums leading-none">
+            {/* Score Section
+                On desktop: score stacked above slider (original layout).
+                On mobile: score and slider sit side by side via flex-row-reverse. */}
+            <div className="pt-2 flex flex-row-reverse items-center gap-4 md:block md:gap-0">
+              <div className="flex items-baseline shrink-0 md:mb-4">
+                <span className="text-[#e8d44d] text-4xl md:text-6xl font-black italic tabular-nums leading-none">
                   {score}
                 </span>
-                <span className="text-[#e8d44d]/40 text-2xl font-light">/100</span>
+                <span className="text-[#e8d44d] text-2xl md:text-4xl font-black italic leading-none">
+                  /100
+                </span>
               </div>
 
               {/* Slider */}
-              <div>
-                <div className="flex justify-between text-[10px] text-[#e8d44d]/50 mb-2 font-bold tracking-wider">
+              <div className="flex-1 md:w-full">
+                <div className="flex justify-between text-[11px] text-white/80 mb-2 font-bold tracking-wider">
                   <span>1</span>
                   <span>25</span>
                   <span>50</span>
@@ -376,27 +406,27 @@ export default function AudiencePage() {
                   onChange={(e) => setScore(parseInt(e.target.value))}
                   className="judge-slider w-full h-[3px] rounded-full appearance-none cursor-pointer"
                   style={{
-                    background: `linear-gradient(to right, #e8d44d 0%, #e8d44d ${((score - 1) / 99) * 100}%, rgba(232,212,77,0.2) ${((score - 1) / 99) * 100}%)`,
+                    background: `linear-gradient(to right, #e8d44d 0%, #e8d44d ${((score - 1) / 99) * 100}%, rgba(255,255,255,0.25) ${((score - 1) / 99) * 100}%)`,
                   }}
                   aria-label="Score from 1 to 100"
                 />
-                <div className="text-center text-[10px] tracking-[0.2em] text-[#e8d44d]/60 mt-2 font-bold">
+                <div className="text-center text-[11px] tracking-[0.2em] text-[#e8d44d] mt-3 font-black">
                   {getScoreLabel(score)}
                 </div>
               </div>
             </div>
 
             {/* Action Buttons */}
-            <div className="space-y-3 pt-2">
+            <div className="flex gap-2 md:block md:space-y-2 pt-1">
               <button
                 onClick={submitScore}
                 disabled={submitStatus === "success"}
-                className={`w-full py-4 text-[12px] font-bold tracking-[0.25em] transition-colors rounded ${
+                className={`flex-1 md:w-full py-3 rounded-full text-[12px] font-black tracking-[0.25em] transition-colors ${
                   submitStatus === "success"
                     ? "bg-green-700 text-white"
                     : submitStatus === "error"
                       ? "bg-red-700 text-white"
-                      : "bg-[#e8d44d] text-[#1a0000] hover:bg-[#f0dc5a]"
+                      : "bg-[#e8d44d] text-[#8b0000] hover:bg-[#f0dc5a]"
                 }`}
               >
                 {submitStatus === "success"
@@ -413,7 +443,7 @@ export default function AudiencePage() {
               <button
                 onClick={skipEntry}
                 disabled={videoIndex >= PLAYLIST.length - 1}
-                className="w-full py-4 border border-[#e8d44d]/30 text-[#e8d44d]/70 text-[12px] font-bold tracking-[0.25em] hover:border-[#e8d44d]/60 hover:text-[#e8d44d] disabled:opacity-30 transition-colors rounded"
+                className="flex-1 md:w-full py-3 rounded-full border-2 border-[#e8d44d] bg-transparent text-[#e8d44d] text-[12px] font-black tracking-[0.25em] hover:bg-[#e8d44d]/10 disabled:opacity-30 transition-colors"
               >
                 SKIP ENTRY
               </button>
@@ -421,7 +451,7 @@ export default function AudiencePage() {
           </div>
 
           {/* Bottom Stats */}
-          <div className="border-t border-[#e8d44d]/20 pt-5 mt-6">
+          <div className="border-t border-[#e8d44d]/20 pt-4 mt-4">
             <div className="flex justify-between text-center">
               <div>
                 <div className="text-[#e8d44d] text-4xl font-black tabular-nums">
@@ -453,7 +483,7 @@ export default function AudiencePage() {
       </main>
 
       {/* Bottom Navigation */}
-      <div className="relative z-10 flex items-center justify-between px-6 pb-4 shrink-0">
+      <div className="relative z-10 flex items-center justify-between px-4 sm:px-6 pb-3 sm:pb-4 shrink-0">
         <div className="flex items-center gap-2">
           <button
             onClick={() => goToVideo(videoIndex - 1)}
@@ -481,9 +511,9 @@ export default function AudiencePage() {
             href="https://instagram.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[#e8d44d]/40 hover:text-[#e8d44d]/70 transition-colors"
+            className="text-[#e8d44d]/80 hover:text-[#e8d44d] transition-colors"
           >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <rect x="2" y="2" width="20" height="20" rx="5" />
               <circle cx="12" cy="12" r="5" />
               <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
@@ -493,14 +523,109 @@ export default function AudiencePage() {
             href="https://x.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[#e8d44d]/40 hover:text-[#e8d44d]/70 transition-colors"
+            className="text-[#e8d44d]/80 hover:text-[#e8d44d] transition-colors"
           >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
               <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
             </svg>
           </a>
         </div>
       </div>
+
+      {/* Sidebar Drawer */}
+      {sidebarOpen && (
+        <>
+          <div
+            onClick={() => setSidebarOpen(false)}
+            className="absolute inset-0 bg-black/60 z-40 transition-opacity"
+          />
+          <aside className="absolute top-0 right-0 bottom-0 w-full max-w-[340px] sm:w-[340px] bg-[#1a1a1a] border-l-2 border-[#e8d44d]/30 z-50 flex flex-col shadow-2xl">
+            <div className="flex items-center justify-between px-6 py-5 border-b border-[#e8d44d]/15">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-[#e8d44d] flex items-center justify-center text-base font-bold text-[#1a1a1a]">
+                  {userName.charAt(0).toUpperCase()}
+                </div>
+                <div>
+                  <div className="text-[#e8d44d] text-sm font-bold uppercase tracking-wider">
+                    {userName}
+                  </div>
+                  <div className="text-[#e8d44d]/50 text-[10px] tracking-wider">
+                    {judgedCount}/{PLAYLIST.length} JUDGED
+                  </div>
+                </div>
+              </div>
+              <button
+                onClick={() => setSidebarOpen(false)}
+                className="text-[#e8d44d]/60 hover:text-[#e8d44d] transition-colors"
+                title="Close"
+              >
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                  <path d="M5 5l10 10M15 5L5 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                </svg>
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto">
+              <div className="px-6 pt-5 pb-2 text-[10px] tracking-[0.2em] text-[#e8d44d]/50 font-bold">
+                ENTRIES
+              </div>
+              <nav className="px-3">
+                {PLAYLIST.map((video, idx) => {
+                  const isCurrent = idx === videoIndex;
+                  const isJudged = submittedScores[video.id] !== undefined;
+                  return (
+                    <button
+                      key={video.id}
+                      onClick={() => {
+                        setVideoIndex(idx);
+                        setSidebarOpen(false);
+                      }}
+                      className={`w-full flex items-center justify-between gap-3 px-3 py-3 rounded text-left transition-colors ${
+                        isCurrent
+                          ? "bg-[#e8d44d]/20 text-[#e8d44d]"
+                          : "text-[#e8d44d]/80 hover:bg-[#e8d44d]/10"
+                      }`}
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        <span className="text-[11px] text-[#e8d44d]/50 font-bold tabular-nums w-6">
+                          {String(idx + 1).padStart(2, "0")}
+                        </span>
+                        <span className="text-sm font-bold truncate">
+                          {video.title}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2 shrink-0">
+                        {isJudged && (
+                          <span className="inline-flex items-center justify-center w-8 h-6 bg-[#e8d44d] text-[#1a1a1a] text-[10px] font-black">
+                            {submittedScores[video.id]}
+                          </span>
+                        )}
+                        {isCurrent && (
+                          <span className="text-[9px] tracking-wider font-bold text-[#e8d44d]/70">
+                            NOW
+                          </span>
+                        )}
+                      </div>
+                    </button>
+                  );
+                })}
+              </nav>
+            </div>
+
+            <div className="px-3 py-4 border-t border-[#e8d44d]/15">
+              <button
+                onClick={handleLogout}
+                className="w-full flex items-center gap-3 px-3 py-3 rounded text-[#e8d44d]/70 hover:text-[#e8d44d] hover:bg-[#e8d44d]/10 text-sm font-bold transition-colors"
+              >
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                  <path d="M7 2H4a2 2 0 00-2 2v10a2 2 0 002 2h3M13 13l4-4-4-4M7 9h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                LOG OUT
+              </button>
+            </div>
+          </aside>
+        </>
+      )}
     </div>
   );
 }
