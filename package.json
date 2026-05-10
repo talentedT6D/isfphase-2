@@ -8,7 +8,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "export:top50": "node scripts/export-top-50.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.99.2",
