@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { PLAYLIST } from "@/lib/videos";
+import { PLAYLIST_SET_1, PLAYLIST_SET_2, type SubmissionSet } from "@/lib/videos";
 import { useAdminRatings } from "@/hooks/useRatings";
 import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 
@@ -21,8 +21,15 @@ export default function AudiencePage() {
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
   const [submitError, setSubmitError] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [activeSet, setActiveSet] = useState<SubmissionSet>("set1");
   const videoRef = useRef<HTMLVideoElement>(null);
   const fullscreenRef = useRef<HTMLDivElement>(null);
+
+  const PLAYLIST = activeSet === "set1" ? PLAYLIST_SET_1 : PLAYLIST_SET_2;
+
+  useEffect(() => {
+    setVideoIndex((i) => (i >= PLAYLIST.length ? 0 : i));
+  }, [activeSet, PLAYLIST.length]);
 
   useEffect(() => {
     const name = localStorage.getItem("user-name");
@@ -36,7 +43,10 @@ export default function AudiencePage() {
   }, [router]);
 
   const currentVideo = PLAYLIST[videoIndex] || PLAYLIST[0];
-  const judgedCount = Object.keys(submittedScores).length;
+  const judgedCount = PLAYLIST.reduce(
+    (n, v) => (submittedScores[v.id] !== undefined ? n + 1 : n),
+    0
+  );
   const remaining = PLAYLIST.length - judgedCount;
 
   const { averageRating, totalVotes } = useAdminRatings(currentVideo?.id || "");
@@ -215,14 +225,35 @@ export default function AudiencePage() {
             alt="Indian Scroll Festival"
             className="h-7 sm:h-10 w-auto"
           />
-          <div
-            className="text-white text-lg sm:text-2xl tracking-[0.2em]"
-            style={{
-              fontFamily: '"obviously-wide", "obviously", sans-serif',
-              fontWeight: 500,
-            }}
-          >
-            JUDGE PORTAL
+          <div className="flex items-center gap-4">
+            <div className="inline-flex items-center rounded-full border border-[#e8d44d]/40 p-[2px] bg-black/20">
+              {(["set1", "set2"] as const).map((s) => (
+                <button
+                  key={s}
+                  onClick={() => {
+                    if (s === activeSet) return;
+                    setActiveSet(s);
+                    setVideoIndex(0);
+                  }}
+                  className={`px-3 sm:px-4 py-1 rounded-full text-[10px] sm:text-[11px] font-black tracking-[0.2em] transition-colors ${
+                    activeSet === s
+                      ? "bg-[#e8d44d] text-[#8b0000]"
+                      : "text-[#e8d44d]/70 hover:text-[#e8d44d]"
+                  }`}
+                >
+                  {s === "set1" ? "SET 1" : "SET 2"}
+                </button>
+              ))}
+            </div>
+            <div
+              className="text-white text-lg sm:text-2xl tracking-[0.2em]"
+              style={{
+                fontFamily: '"obviously-wide", "obviously", sans-serif',
+                fontWeight: 500,
+              }}
+            >
+              JUDGE PORTAL
+            </div>
           </div>
         </header>
 
@@ -233,10 +264,12 @@ export default function AudiencePage() {
               Thank You, {userName}!
             </h1>
             <p className="text-[#e8d44d]/70 text-sm tracking-[0.1em] mb-2">
-              You have judged all {PLAYLIST.length} entries.
+              You have judged all {PLAYLIST.length} entries in {activeSet === "set1" ? "Set 1" : "Set 2"}.
             </p>
             <p className="text-[#e8d44d]/50 text-xs tracking-[0.05em] mb-10">
-              Your scores have been submitted successfully. The results will be announced soon.
+              {activeSet === "set1"
+                ? `Switch to Set 2 above to judge the remaining entries.`
+                : `Your scores have been submitted successfully.`}
             </p>
 
             <div className="border border-[#e8d44d]/30 p-6 mb-8">
@@ -247,7 +280,14 @@ export default function AudiencePage() {
                 </div>
                 <div>
                   <div className="text-[#e8d44d] text-4xl font-black">
-                    {Math.round(Object.values(submittedScores).reduce((a, b) => a + b, 0) / judgedCount)}
+                    {judgedCount > 0
+                      ? Math.round(
+                          PLAYLIST.reduce(
+                            (sum, v) => sum + (submittedScores[v.id] ?? 0),
+                            0
+                          ) / judgedCount
+                        )
+                      : 0}
                   </div>
                   <div className="text-[10px] tracking-[0.15em] text-[#e8d44d]/50 mt-1">YOUR AVG</div>
                 </div>
@@ -292,6 +332,30 @@ export default function AudiencePage() {
         />
 
         <div className="flex items-center gap-3 sm:gap-6">
+          {/* Set toggle */}
+          <div className="inline-flex items-center rounded-full border border-[#e8d44d]/40 p-[2px] bg-black/20">
+            {(["set1", "set2"] as const).map((s) => (
+              <button
+                key={s}
+                onClick={() => {
+                  if (s === activeSet) return;
+                  setActiveSet(s);
+                  setVideoIndex(0);
+                  setSubmitStatus("idle");
+                  setSubmitError("");
+                }}
+                className={`px-3 sm:px-4 py-1 rounded-full text-[10px] sm:text-[11px] font-black tracking-[0.2em] transition-colors ${
+                  activeSet === s
+                    ? "bg-[#e8d44d] text-[#8b0000]"
+                    : "text-[#e8d44d]/70 hover:text-[#e8d44d]"
+                }`}
+                aria-pressed={activeSet === s}
+              >
+                {s === "set1" ? "SET 1" : "SET 2"}
+              </button>
+            ))}
+          </div>
+
           <div className="text-right hidden sm:block">
             <div
               className="text-white text-xl sm:text-2xl tracking-[0.2em]"
