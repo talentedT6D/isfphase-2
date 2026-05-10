@@ -97,6 +97,7 @@ const SETS = [
   { name: "PLAYLIST_SET_1", dir: "public/submissions" },
   { name: "PLAYLIST_SET_2", dir: "public/submissions-set-2" },
   { name: "PLAYLIST_SET_3", dir: "public/submissions-set-3" },
+  { name: "PLAYLIST_SET_4", dir: "public/submissions-set-4" },
 ];
 const OUT = "src/lib/playlist.generated.ts";
 

@@ -52,6 +52,7 @@ function loadPlaylist() {
     { name: "PLAYLIST_SET_1", label: "Set 1" },
     { name: "PLAYLIST_SET_2", label: "Set 2" },
     { name: "PLAYLIST_SET_3", label: "Set 3" },
+    { name: "PLAYLIST_SET_4", label: "Set 4" },
   ];
   const all = [];
   for (const { name, label } of sets) {

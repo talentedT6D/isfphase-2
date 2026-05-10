@@ -6,6 +6,7 @@ import {
   PLAYLIST_SET_1,
   PLAYLIST_SET_2,
   PLAYLIST_SET_3,
+  PLAYLIST_SET_4,
   type SubmissionSet,
 } from "@/lib/videos";
 
@@ -13,6 +14,7 @@ const SET_LABELS: Record<SubmissionSet, string> = {
   set1: "SET 1",
   set2: "SET 2",
   set3: "SET 3",
+  set4: "SET 4",
 };
 import { useAdminRatings } from "@/hooks/useRatings";
 import { supabase, isSupabaseConfigured } from "@/lib/supabase";
@@ -41,7 +43,9 @@ export default function AudiencePage() {
       ? PLAYLIST_SET_1
       : activeSet === "set2"
         ? PLAYLIST_SET_2
-        : PLAYLIST_SET_3;
+        : activeSet === "set3"
+          ? PLAYLIST_SET_3
+          : PLAYLIST_SET_4;
 
   useEffect(() => {
     setVideoIndex((i) => (i >= PLAYLIST.length ? 0 : i));
@@ -243,7 +247,7 @@ export default function AudiencePage() {
           />
           <div className="flex items-center gap-4">
             <div className="inline-flex items-center rounded-full border border-[#e8d44d]/40 p-[2px] bg-black/20">
-              {(["set1", "set2", "set3"] as const).map((s) => (
+              {(["set1", "set2", "set3", "set4"] as const).map((s) => (
                 <button
                   key={s}
                   onClick={() => {
@@ -284,9 +288,9 @@ export default function AudiencePage() {
               {SET_LABELS[activeSet].replace("SET", "Set")}.
             </p>
             <p className="text-[#e8d44d]/50 text-xs tracking-[0.05em] mb-10">
-              {activeSet === "set3"
+              {activeSet === "set4"
                 ? `Your scores have been submitted successfully.`
-                : `Switch to ${activeSet === "set1" ? "Set 2 or Set 3" : "Set 3"} above to judge the remaining entries.`}
+                : `Switch to another set above to judge the remaining entries.`}
             </p>
 
             <div className="border border-[#e8d44d]/30 p-6 mb-8">
@@ -351,7 +355,7 @@ export default function AudiencePage() {
         <div className="flex items-center gap-3 sm:gap-6">
           {/* Set toggle */}
           <div className="inline-flex items-center rounded-full border border-[#e8d44d]/40 p-[2px] bg-black/20">
-            {(["set1", "set2", "set3"] as const).map((s) => (
+            {(["set1", "set2", "set3", "set4"] as const).map((s) => (
               <button
                 key={s}
                 onClick={() => {

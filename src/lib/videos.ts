@@ -11,6 +11,12 @@ export interface Video {
 
 // Generated at build/dev time from public/submissions(-set-2)/*/info.txt
 // by scripts/generate-playlist.mjs.
-export { PLAYLIST, PLAYLIST_SET_1, PLAYLIST_SET_2, PLAYLIST_SET_3 } from "./playlist.generated";
+export {
+  PLAYLIST,
+  PLAYLIST_SET_1,
+  PLAYLIST_SET_2,
+  PLAYLIST_SET_3,
+  PLAYLIST_SET_4,
+} from "./playlist.generated";
 
-export type SubmissionSet = "set1" | "set2" | "set3";
+export type SubmissionSet = "set1" | "set2" | "set3" | "set4";

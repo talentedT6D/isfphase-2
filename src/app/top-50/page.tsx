@@ -6,6 +6,7 @@ import {
   PLAYLIST_SET_1,
   PLAYLIST_SET_2,
   PLAYLIST_SET_3,
+  PLAYLIST_SET_4,
   type Video,
 } from "@/lib/videos";
 import { useAllVideoRatings } from "@/hooks/useRatings";
@@ -13,7 +14,7 @@ import { useAllVideoRatings } from "@/hooks/useRatings";
 interface RankedEntry {
   rank: number;
   video: Video;
-  set: "Set 1" | "Set 2" | "Set 3";
+  set: "Set 1" | "Set 2" | "Set 3" | "Set 4";
   avgScore: number;
   totalVotes: number;
   lastJudgedAt: string | null;
@@ -75,6 +76,7 @@ export default function Top50Page() {
       ...PLAYLIST_SET_1.map((v) => ({ video: v, set: "Set 1" as const })),
       ...PLAYLIST_SET_2.map((v) => ({ video: v, set: "Set 2" as const })),
       ...PLAYLIST_SET_3.map((v) => ({ video: v, set: "Set 3" as const })),
+      ...PLAYLIST_SET_4.map((v) => ({ video: v, set: "Set 4" as const })),
     ];
     const byId = new Map(entries.map((e) => [e.videoId, e]));
 
