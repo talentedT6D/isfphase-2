@@ -48,21 +48,25 @@ function loadPlaylist() {
   // The generated file is TypeScript — parse the JSON arrays out of it
   // directly so we don't need a TS toolchain in the script.
   const src = fs.readFileSync(playlistPath, "utf8");
-  const sets = ["PLAYLIST_SET_1", "PLAYLIST_SET_2"];
+  const sets = [
+    { name: "PLAYLIST_SET_1", label: "Set 1" },
+    { name: "PLAYLIST_SET_2", label: "Set 2" },
+    { name: "PLAYLIST_SET_3", label: "Set 3" },
+  ];
   const all = [];
-  for (const setName of sets) {
+  for (const { name, label } of sets) {
     const re = new RegExp(
-      `export const ${setName}: Video\\[\\] = (\\[[\\s\\S]*?\\]);`,
+      `export const ${name}: Video\\[\\] = (\\[[\\s\\S]*?\\]);`,
       "m"
     );
     const m = src.match(re);
     if (!m) {
-      console.warn(`[top-50] could not parse ${setName} from playlist`);
+      console.warn(`[top-50] could not parse ${name} from playlist`);
       continue;
     }
     const arr = JSON.parse(m[1]);
     for (const v of arr) {
-      all.push({ ...v, set: setName === "PLAYLIST_SET_1" ? "Set 1" : "Set 2" });
+      all.push({ ...v, set: label });
     }
   }
   return all;

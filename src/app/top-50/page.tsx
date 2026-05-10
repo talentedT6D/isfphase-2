@@ -2,13 +2,18 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { PLAYLIST_SET_1, PLAYLIST_SET_2, type Video } from "@/lib/videos";
+import {
+  PLAYLIST_SET_1,
+  PLAYLIST_SET_2,
+  PLAYLIST_SET_3,
+  type Video,
+} from "@/lib/videos";
 import { useAllVideoRatings } from "@/hooks/useRatings";
 
 interface RankedEntry {
   rank: number;
   video: Video;
-  set: "Set 1" | "Set 2";
+  set: "Set 1" | "Set 2" | "Set 3";
   avgScore: number;
   totalVotes: number;
   lastJudgedAt: string | null;
@@ -61,6 +66,7 @@ export default function Top50Page() {
     const allVideos = [
       ...PLAYLIST_SET_1.map((v) => ({ video: v, set: "Set 1" as const })),
       ...PLAYLIST_SET_2.map((v) => ({ video: v, set: "Set 2" as const })),
+      ...PLAYLIST_SET_3.map((v) => ({ video: v, set: "Set 3" as const })),
     ];
     const byId = new Map(entries.map((e) => [e.videoId, e]));
 

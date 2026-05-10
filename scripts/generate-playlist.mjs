@@ -18,6 +18,7 @@ import path from "node:path";
 const SETS = [
   { name: "PLAYLIST_SET_1", dir: "public/submissions" },
   { name: "PLAYLIST_SET_2", dir: "public/submissions-set-2" },
+  { name: "PLAYLIST_SET_3", dir: "public/submissions-set-3" },
 ];
 const OUT = "src/lib/playlist.generated.ts";
 
