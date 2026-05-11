@@ -9,7 +9,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "export:top50": "node scripts/export-top-50.mjs"
+    "export:top50": "node scripts/export-top-50.mjs",
+    "probe:durations": "node scripts/probe-durations.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.99.2",

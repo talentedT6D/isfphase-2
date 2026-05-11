@@ -7,6 +7,7 @@ export interface Video {
   phone?: string | null;
   email?: string | null;
   category?: string | null;
+  duration?: number | null;
 }
 
 // Generated at build/dev time from public/submissions(-set-2)/*/info.txt

@@ -93,6 +93,16 @@ function loadRoster() {
 
 const ROSTER = loadRoster();
 
+const DURATIONS_PATH = "scripts/durations.json";
+const DURATIONS = fs.existsSync(DURATIONS_PATH)
+  ? JSON.parse(fs.readFileSync(DURATIONS_PATH, "utf8"))
+  : {};
+if (Object.keys(DURATIONS).length === 0) {
+  console.warn(
+    `[playlist] ${DURATIONS_PATH} is empty/missing — run: node scripts/probe-durations.mjs`
+  );
+}
+
 const SETS = [
   { name: "PLAYLIST_SET_1", dir: "public/submissions" },
   { name: "PLAYLIST_SET_2", dir: "public/submissions-set-2" },
@@ -166,16 +176,18 @@ function buildPlaylist(srcDir) {
     const roster = ROSTER.get(title.toLowerCase()) || null;
     // Strip the "public/" prefix so the URL is web-rooted.
     const urlBase = srcDir.replace(/^public\//, "");
+    const url = `/${urlBase.split("/").map(encodeURIComponent).join("/")}/${encodeURIComponent(folder)}/${encodeURIComponent(videoFile)}`;
     return [
       {
         id,
         title,
         creator,
-        url: `/${urlBase.split("/").map(encodeURIComponent).join("/")}/${encodeURIComponent(folder)}/${encodeURIComponent(videoFile)}`,
+        url,
         name: roster?.name ?? info.Name ?? null,
         phone: roster?.phone ?? null,
         email: roster?.email ?? info.Email ?? null,
         category: roster?.category ?? info.Category ?? null,
+        duration: typeof DURATIONS[url] === "number" ? DURATIONS[url] : null,
       },
     ];
   });

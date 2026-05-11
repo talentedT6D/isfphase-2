@@ -28,6 +28,12 @@ function csvEscape(value: string | number | null | undefined): string {
   return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
 }
 
+function formatMmSs(seconds: number): string {
+  const m = Math.floor(seconds / 60);
+  const s = Math.round(seconds - m * 60);
+  return `${m}:${String(s).padStart(2, "0")}`;
+}
+
 function buildCsv(rows: RankedEntry[]): string {
   const header = [
     "rank",
@@ -39,12 +45,15 @@ function buildCsv(rows: RankedEntry[]): string {
     "set",
     "average_score",
     "vote_count",
+    "duration",
+    "duration_seconds",
     "email",
     "video_id",
     "url",
   ];
   const lines = [header.join(",")];
   for (const r of rows) {
+    const dur = r.video.duration ?? null;
     lines.push(
       [
         r.rank,
@@ -56,6 +65,8 @@ function buildCsv(rows: RankedEntry[]): string {
         r.set,
         r.avgScore,
         r.totalVotes,
+        dur != null ? formatMmSs(dur) : "",
+        dur != null ? Math.round(dur * 100) / 100 : "",
         r.video.email ?? "",
         r.video.id,
         r.video.url,
@@ -212,8 +223,14 @@ export default function Top50Page() {
                       {r.avgScore}
                       <span className="text-[#e8d44d]/50 text-sm font-bold">/100</span>
                     </div>
-                    <div className="text-[#e8d44d]/60 text-[10px] tracking-[0.15em] font-bold mt-1">
-                      {r.totalVotes} {r.totalVotes === 1 ? "VOTE" : "VOTES"}
+                    <div className="text-[#e8d44d]/60 text-[10px] tracking-[0.15em] font-bold mt-1 flex items-center gap-2 justify-end">
+                      <span>{r.totalVotes} {r.totalVotes === 1 ? "VOTE" : "VOTES"}</span>
+                      {r.video.duration != null && (
+                        <span className="text-[#e8d44d]/40">·</span>
+                      )}
+                      {r.video.duration != null && (
+                        <span className="tabular-nums">{formatMmSs(r.video.duration)}</span>
+                      )}
                     </div>
                   </div>
 
@@ -279,6 +296,14 @@ export default function Top50Page() {
                       <InfoRow label="Set" value={r.set} />
                       <InfoRow label="Average score" value={`${r.avgScore} / 100`} />
                       <InfoRow label="Vote count" value={String(r.totalVotes)} />
+                      <InfoRow
+                        label="Duration"
+                        value={
+                          r.video.duration != null
+                            ? `${formatMmSs(r.video.duration)} (${r.video.duration.toFixed(1)}s)`
+                            : "—"
+                        }
+                      />
                       <InfoRow label="Video ID" value={r.video.id} mono />
                       <InfoRow
                         label="URL"

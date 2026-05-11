@@ -28,6 +28,12 @@ const SUPABASE_ANON_KEY =
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2YnNtcHd2eXJ4a2d6cHR3eWhqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNDQxMTMsImV4cCI6MjA5MDkyMDExM30.g7lPGRaW8sdQ9LFACdvc9UWgAhGGOazIIKB4ZWJyxGE";
 
+function formatMmSs(seconds) {
+  const m = Math.floor(seconds / 60);
+  const s = Math.round(seconds - m * 60);
+  return `${m}:${String(s).padStart(2, "0")}`;
+}
+
 function csvEscape(value) {
   if (value === null || value === undefined) return "";
   const s = String(value);
@@ -132,6 +138,12 @@ async function main() {
       set: v.set,
       average_score: Math.round(s.averageRating * 100) / 100,
       vote_count: s.voteCount,
+      duration_seconds:
+        typeof v.duration === "number"
+          ? Math.round(v.duration * 100) / 100
+          : "",
+      duration:
+        typeof v.duration === "number" ? formatMmSs(v.duration) : "",
       url: v.url,
     };
   });
@@ -155,6 +167,8 @@ async function main() {
     "set",
     "average_score",
     "vote_count",
+    "duration",
+    "duration_seconds",
     "email",
     "video_id",
     "url",
@@ -172,6 +186,8 @@ async function main() {
         r.set,
         r.average_score,
         r.vote_count,
+        r.duration,
+        r.duration_seconds,
         r.email ?? "",
         r.id,
         r.url,
